@@ -22,7 +22,7 @@ We'll start by loading posterior distributions for otolith counts and otolith le
 originally produced in the document 'analyze_stomachs.Rmd'.  Let's also take a look at it's structure: 
 
 ```{r load1}
-  load("/data/otolith_posteriors.RData")
+  load("../data/otolith_posteriors.RData")
   str(Otolith_posteriors)
 ```
 The Pred_otoliths and Pred_length objects are 5 dimensional array, where the 2nd, 3rd, 4th, and 5th dimensions correspond to prey type, seal age class (Adult/Pup), region (Bering/Chukchi) and season (Summer/Winter), respectively.  The prey species are documented in the Meta object.  So for instance the following plots a  histogram of predicted otolith lengths in mm for walleye pollock for adult seals in the Bering Sea in the summer:
@@ -41,7 +41,7 @@ levels because a simple model was used (e.g., an intercept-only model).
 Next, let's bring in some regression functions to perform conversion of otolith length (mm) to fish length (mm):
 
 ```{r load2}
-  load('./data/otolith_regressions.RData')  #from otolith_length_modeling_and_lit.Rmd
+  load('../data/otolith_regressions.RData')  #from otolith_length_modeling_and_lit.Rmd
 ```
 
 Note that in these functions (e.g., "AC_OL_to_FL") the *type* of
@@ -95,7 +95,7 @@ This is in fork length for most species (exceptions being total length for capel
 As a sanity check, let's load actual otolith lengths from fish stomachs and see what the distribution of fish length looks like if we apply an otolith length to fish length conversion. We'll just do this for one species (Pacific herring) 
 
 ```{r sanity}
-load("Ot_len_df.RData")
+load("../data/Ot_len_df.RData")
 Herring_len = Ot_len_df$OtolithLength[which(Ot_len_df$FishSpecies=="Pacific herring")]
 hist(PH_OL_to_FL(Herring_len))
 ```
@@ -109,7 +109,7 @@ We'll first load weight-length regressions that were produced using "Len_Wt.R." 
 are functions that convert various length measurements (in mm) to wet weight (in g).  
 
 ```{r Length_to_weight}
-  load('weight_length_regressions.RData')  #Len_Wt.R
+  load('../data/weight_length_regressions.RData')  #Len_Wt.R
 ```
 
 The astute reader will note that, based on function name endings, there are several mismatches with
@@ -244,7 +244,7 @@ Ultimately the expected fraction of calories devoted to a particular
 species is a function of the expected number and weight of species consumed, as well as the energy content of different prey items.  Let's try to incorporate that information as well.  Our first goal will be to calculate the expected kcal represented by the otoliths of each prey species (stratified by age, region, and season).  Since we don't have any information for the "Other" category, we'll just use the mean for the other species (both for expected mass and energy content).
 
 ```{r energy_content}
-load("energy_mass_regressions.RData") #from mass_energy.Rmd
+load("../data/energy_mass_regressions.RData") #from mass_energy.Rmd
 Tot_kcal = array(dim=c(10000,10,2,2,2))
 Kcal_per_fish = Fish_weight_preds
 Kcal_per_fish[,1,,,]=PH_WetMass_to_kCal(Fish_weight_preds[,1,,,])
@@ -384,7 +384,7 @@ dev.off()
 And finally, we'll save the B array to make population level inference:
 
 ```{r saveB}
-save(B,file="./Data/prey_composition_g_kcal.RData")
+save(B,file="../Data/prey_composition_g_kcal.RData")
 ```
 
 

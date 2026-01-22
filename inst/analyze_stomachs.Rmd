@@ -31,13 +31,13 @@ The first step is to load our various data sources.  Let's start with the ADF&G 
 is the most likely scenario.  In many cases, we'll end up omitting age class as a predictor anyway.
 
 ```{r, load1}
-  Ot_len_df1 <- read.csv(file="./data/ADFG_SpottedSeals_OtolithsMeasured20220627.csv",header=T)
+  Ot_len_df1 <- read.csv(file="../data/ADFG_SpottedSeals_OtolithsMeasured20220627.csv",header=T)
   Ot_len_df1$SealAgeClass[which(Ot_len_df1$SPEC_NUM %in% c("PL12GAM049","PL12SH052","PL14GAM124"))]="Pup"  #confirmed pups via claw age (Justin Crawford, 5/9 email)
   Ot_len_df1$SealAgeClass[which(Ot_len_df1$SealAgeClass=='')]='NonPup'
-  Ot_len_df2 <- read.csv(file="./data/ADFG_SpottedSeals_OtolithsMeasured20230424_PriorityMeasurements.csv",header=T)
+  Ot_len_df2 <- read.csv(file="../data/ADFG_SpottedSeals_OtolithsMeasured20230424_PriorityMeasurements.csv",header=T)
   colnames(Ot_len_df2)=colnames(Ot_len_df1)  #slight variation in capitalization in column names
   Ot_len_df = rbind(Ot_len_df1,Ot_len_df2)
-  Stomachs_df <- read.csv(file="./data/ADFG_SpottedSeals_StomachContentsData20220705.csv",header=T)
+  Stomachs_df <- read.csv(file="../data/ADFG_SpottedSeals_StomachContentsData20220705.csv",header=T)
   
   #we need a way to link scientific names to common names in various Excel files
   Species = c("Walleye pollock","Pacific cod","Pacific sand lance","Pacific herring",   
@@ -83,7 +83,7 @@ field teams found scat but didn't see the animal).  These are more likely
 to be non-pups than pups, so rather than throw those out, we'll just set those to be adults.  Note that not all of the ADFG fields are going to be filled in, but we'll make sure to fill in all fields required for our analysis.
 
 ```{r, load2}
-  AFSC_data <- read.csv("./data/PEP_Pl_otolength_allspecies.csv")
+  AFSC_data <- read.csv("../data/PEP_Pl_otolength_allspecies.csv")
   AFSC_data$prey_species[which(AFSC_data$prey_species=="Clupea pallasi")]="Clupea pallasii"  #fix typo / alternate spelling
   AFSC_data$Season = "Winter"
   AFSC_data$Season[which(AFSC_data$Month>4)]="Summer"
@@ -96,11 +96,12 @@ to be non-pups than pups, so rather than throw those out, we'll just set those t
   AFSC_data$SealAgeClass[which(AFSC_data$SealAgeClass=="Unknown")]="NonPup"
 
   #calculate %FO by species
+  Unique_spenos = unique(AFSC_data$speno)
+  n_seal = length(Unique_spenos)
   Species = unique(AFSC_data$prey_species)
   n_un = length(Species)
   I_species = rep(0,n_un)
   FO = rep(0,n_un)
-  n_seal = length(Unique_spenos)
   for(iseal in 1:n_seal){
     for(ifish in 1:n_un){
       Cur_dat = AFSC_data[which(AFSC_data$speno==Unique_spenos[iseal]),]
@@ -755,8 +756,8 @@ Finally, we'll exponentiate our otolith length predictions and save posterior ou
   Pred_length = exp(Pred_length)
   Meta = "Posterior distributions for predicted otolith lengths and counts occurring in spotted seal stomachs from the Bering and Chukchi Seas.  Dimensions of each array are posterior replicate, prey species, age class (Adult/Pup), strata (Bering/Chukchi), and season (Summer/Winter).  The order of prey species is pacific herring, rainbow smelt, capelin, sand lance, Arctic cod, saffron cod, walleye pollock, pacific cod, and yellowfin sole.  The 10th entry for otolith counts is for non-target/other species.  Otolith lengths are in mm."
   Otolith_posteriors = list("Pred_otoliths"=Pred_otoliths,"Pred_length"=Pred_length,Meta=Meta)
-  save(Otolith_posteriors, file="./data/otolith_posteriors.RData")
-  save(Ot_len_df,file="./data/Ot_len_df.RData")
+  save(Otolith_posteriors, file="../data/otolith_posteriors.RData")
+  save(Ot_len_df,file="../data/Ot_len_df.RData")
 ```
 
 ## References

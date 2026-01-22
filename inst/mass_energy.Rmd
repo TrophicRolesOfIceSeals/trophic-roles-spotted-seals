@@ -17,7 +17,7 @@ This sub-analysis concentrates on the last piece: fish mass to caloric content c
 
 ```{r read}
 #read in data
-Data <- read.csv(file="./data/Lt-Wt-EnergyWet.csv",header=T)
+Data <- read.csv(file="../data/Lt-Wt-EnergyWet.csv",header=T)
 ```
 
 ## Energy content as a function of fish mass
@@ -115,5 +115,5 @@ Let's save these function and export them to an R data file for our
 subsequent fish consumption analysis.
 
 ```{r export}
-save(Cap_WetMass_to_kCal,SL_WetMass_to_kCal,WP_WetMass_to_kCal,PH_WetMass_to_kCal,SC_WetMass_to_kCal,AC_WetMass_to_kCal,PC_WetMass_to_kCal,YS_WetMass_to_kCal,RS_WetMass_to_kCal,file="./data/energy_mass_regressions.RData")
+save(Cap_WetMass_to_kCal,SL_WetMass_to_kCal,WP_WetMass_to_kCal,PH_WetMass_to_kCal,SC_WetMass_to_kCal,AC_WetMass_to_kCal,PC_WetMass_to_kCal,YS_WetMass_to_kCal,RS_WetMass_to_kCal,file="../data/energy_mass_regressions.RData")
 ```

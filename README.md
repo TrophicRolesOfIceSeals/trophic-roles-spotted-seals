@@ -66,12 +66,12 @@ final integrated analysis.
 6. [Supplement 5] Run `seal_mass_at_age.Rmd` to predict weight-at-age of spotted seals using a Bayesian 
     implementation of von Bertalanffy growth models.
     
-    **Inputs**: `data/Spotted seal live capture measurements.csv`
+    **Inputs**: `data/Spotted seal live capture measurements.csv`, `data/Stable_stage_matrix.RData`
     
     **Outputs**: `data/Seal_wt_age.RData`
 
 7.  [Supplement 6] Run `captiveFoodIntake_massSpecific_kcal-kg.Rmd` to analyze energy consumption of
-captive spotted seals [Supplement 6 of paper].  
+captive spotted seals.  
 
     **Inputs**: `data/PHOCAS_spotted_seal_diet.csv`  
   

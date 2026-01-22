@@ -20,7 +20,7 @@ For most fish species of interest, we have both data from NOAA-AFSC's age and gr
 To begin, let's see how much data we have from the AFSC age and growth lab.
 
 ```{r data}
-Data <- read.csv('./data/otolith_data_for_Paul.csv')
+Data <- read.csv('../data/otolith_data_for_Paul.csv')
 
 #limit data to those records with otolith length and fish length
 Data <- Data[which(is.na(Data$length)==FALSE),]
@@ -282,5 +282,5 @@ Let's save these function and export them to an R data file for our
 subsequent fish consumption analysis.
 
 ```{r export}
-save(AC_OL_to_FL,PC_OL_to_FL,WP_OL_to_FL,YS_OL_to_FL,SC_OL_to_FL,PSL_OL_to_FL,ASL_OL_to_FL,Cap_OL_to_TL,RS_OL_to_SL,PH_OL_to_FL,file="otolith_regressions.RData")
+save(AC_OL_to_FL,PC_OL_to_FL,WP_OL_to_FL,YS_OL_to_FL,SC_OL_to_FL,PSL_OL_to_FL,ASL_OL_to_FL,Cap_OL_to_TL,RS_OL_to_SL,PH_OL_to_FL,file="../data/otolith_regressions.RData")
 ```

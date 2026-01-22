@@ -17,7 +17,7 @@ library(lubridate)
 
 pupFilter <- 7 # censor pups <=7 months old
 
-raw <- readr::read_csv("./Data/PHOCAS_spotted_seal_diet.csv",na="-",col_types="ffcfcffifif")
+raw <- readr::read_csv("../Data/PHOCAS_spotted_seal_diet.csv",na="-",col_types="ffcfcffifif")
 intake <- raw %>% select(Seal,`Month-Year`,Facility, Season, Sex,`Age (years)`,`Age (months)`,`Age class`,`Mean Body Mass (kg)`,`Mean Food Intake (kcals)`,`Mass-specific food intake (kcal/kg)`,`Estimated data`) %>% 
 # rename columns
           rename(seal = Seal, date = `Month-Year`, facility = Facility, season=Season, sex = Sex, ageYears = `Age (years)`, ageMonths = `Age (months)`, ageClass = `Age class`, mass = `Mean Body Mass (kg)`, intake = `Mean Food Intake (kcals)`, intakems = `Mass-specific food intake (kcal/kg)`, estInd = `Estimated data`) %>% 
@@ -271,6 +271,6 @@ data_pred$lower = apply(Energy_pred_matrix,1,"quantile",0.025)
 data_pred$upper = apply(Energy_pred_matrix,1,"quantile",0.975)
 
 Energy_predictions = list("pred_data"=data_pred,"pred_matrix"=Energy_pred_matrix)
-save(Energy_predictions,file="./Data/Energy_predictions.RData")
+save(Energy_predictions,file="../Data/Energy_predictions.RData")
 
 ```

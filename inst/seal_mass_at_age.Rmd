@@ -3,7 +3,7 @@ title: "Supplement 5: Spotted seal mass-at-age"
 author: "Paul Conn"
 date: '2023-06-08'
 bibliography: references.bib
-output:pdf_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -24,7 +24,7 @@ in "Spotted seal live capture measurements.csv."  Age (in months) is determined 
 Let's bring these data in.
 
 ```{r import}
-Table = read.csv("./Data/Spotted seal live capture measurements.csv")
+Table = read.csv("../Data/Spotted seal live capture measurements.csv")
 Table_ages = Table[-which(is.na(Table$MonthAge)),]
 Table_no_ages = Table[which(is.na(Table$MonthAge)),]
 ```
@@ -215,7 +215,7 @@ vb_ssq_sex_estLinf <- function(pars,age,weight,sex,mature_mass_m,mature_mass_f,S
 
 mature_mass_m = Linf_m
 mature_mass_f = Linf_f
-load('./Data/Stable_stage_matrix.RData')
+load('../Data/Stable_stage_matrix.RData')
 maturity = rep(1,40)
 maturity[1:3] = 0  #ages 0-2 are always sexually immature
 maturity[4] = 0.333  #1/3 of age 3 seals are sexually mature; seals age 4 and up are all sexually mature
@@ -313,7 +313,7 @@ at the month level so we can account for growth within open water and winter per
     xlim(c(0,150)) + xlab('Age (Months)') + ylab("Mass (kg)")
   
   Wt_age = list("fem"=Seal_wt_age_f,"male"=Seal_wt_age_m)
-  save(Wt_age,file="./Data/Seal_wt_age.RData")
+  save(Wt_age,file="../Data/Seal_wt_age.RData")
 
 ```
 
