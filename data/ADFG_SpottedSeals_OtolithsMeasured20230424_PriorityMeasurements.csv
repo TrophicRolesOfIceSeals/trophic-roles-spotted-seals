@@ -1,0 +1,590 @@
+SPEC_NUM,SealSpecies,SealAge,SealAgeClass,SealSEX,Location,Region,Year,Month,MonthNumb,Season,OtolithSealNum,FishSpecies,OtolithLength,Method,Measured by
+SH-M05-00,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,3,Osmerus mordax,4.96,Software,DK
+PL16SH064,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2016,SEP,9,Summer,1,Osmerus mordax,3,Software,DK
+SH-M05-00,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,4,Osmerus mordax,4.07,Software,DK
+SH-M05-00,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,5,Osmerus mordax,4.72,Software,DK
+SH-M05-00,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,6,Osmerus mordax,6.29,Software,DK
+SH-M05-00,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,7,Osmerus mordax,6.46,Software,DK
+SH-M05-00,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,8,Osmerus mordax,5.86,Software,DK
+PL16SH064,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2016,SEP,9,Summer,2,Osmerus mordax,3.01,Software,DK
+PL16SH064,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2016,SEP,9,Summer,3,Osmerus mordax,2.86,Software,DK
+PL16SH064,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2016,SEP,9,Summer,4,Osmerus mordax,2.63,Software,DK
+PL16SH064,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2016,SEP,9,Summer,5,Osmerus mordax,2.75,Software,DK
+PL16SH064,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2016,SEP,9,Summer,6,Osmerus mordax,2.95,Software,DK
+PL16SH064,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2016,SEP,9,Summer,7,Osmerus mordax,2.84,Software,DK
+SH-R03-00,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,2,Osmerus mordax,3.44,Software,DK
+SH-R03-00,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,3,Osmerus mordax,3.06,Software,DK
+SH-M05-00,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,2,Osmerus mordax,5.66,Software,DK
+SH-S17-03,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,6,Osmerus mordax,7.03,Software,DK
+SH-R03-00,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,1,Osmerus mordax,3.3,Software,DK
+PL11SH216,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2011,OCT,10,Summer,4,Osmerus mordax,6.26,Software,AS
+SH-S17-03,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,5,Osmerus mordax,3.14,Software,DK
+PL18SH076,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,SEP,9,Summer,4,Osmerus mordax,5.56,Software,DK
+SH-S17-03,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,7,Osmerus mordax,5.7,Software,DK
+SH-R03-00,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,4,Osmerus mordax,4.27,Software,DK
+SH-S17-03,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,9,Osmerus mordax,4.6,Software,DK
+SH-S17-03,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,10,Osmerus mordax,4.89,Software,DK
+PL11SH216,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2011,OCT,10,Summer,1,Osmerus mordax,2.81,Software,AS
+SH-S17-03,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,8,Osmerus mordax,5.79,Software,DK
+PL11SH216,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2011,OCT,10,Summer,3,Osmerus mordax,5.24,Software,AS
+SH-M05-00,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,1,Osmerus mordax,6.39,Software,DK
+PL11SH216,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2011,OCT,10,Summer,5,Osmerus mordax,6.31,Software,AS
+PL11SH216,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2011,OCT,10,Summer,6,Osmerus mordax,5.7,Software,AS
+PL11SH216,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2011,OCT,10,Summer,7,Osmerus mordax,5.42,Software,AS
+PL11SH216,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2011,OCT,10,Summer,8,Osmerus mordax,2.97,Software,AS
+PL11SH216,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2011,OCT,10,Summer,9,Osmerus mordax,2.77,Software,AS
+SH-R05-00,LARGHA,5,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,1,Osmerus mordax,6.26,Software,DK
+SH-R05-00,LARGHA,5,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,2,Osmerus mordax,4.07,Software,DK
+PL11SH216,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2011,OCT,10,Summer,2,Osmerus mordax,5.07,Software,AS
+PL07SH236,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,8,Osmerus mordax,4.55,Software,DK
+PL18SH076,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,SEP,9,Summer,9,Osmerus mordax,6.49,Software,DK
+PL18SH076,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,SEP,9,Summer,10,Osmerus mordax,6.07,Software,DK
+PL07SH236,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,1,Osmerus mordax,5.06,Software,DK
+PL07SH236,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,2,Osmerus mordax,4.88,Software,DK
+PL07SH236,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,3,Osmerus mordax,4.46,Software,DK
+PL07SH236,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,4,Osmerus mordax,5.01,Software,DK
+PL07SH236,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,5,Osmerus mordax,5.18,Software,DK
+PL18SH076,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,SEP,9,Summer,2,Osmerus mordax,6.62,Software,DK
+PL07SH236,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,7,Osmerus mordax,4.99,Software,DK
+PL18SH076,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,SEP,9,Summer,6,Osmerus mordax,4,Software,DK
+PL07SH236,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,9,Osmerus mordax,4.52,Software,DK
+SH-R10-00,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,1,Osmerus mordax,5.35,Software,DK
+SH-R10-00,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,2,Osmerus mordax,3.84,Software,DK
+SH-R10-00,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,3,Osmerus mordax,4.84,Software,DK
+SH-R10-00,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,4,Osmerus mordax,5.96,Software,DK
+SH-R10-00,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,5,Osmerus mordax,4.92,Software,DK
+SH-R10-00,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,6,Osmerus mordax,6.45,Software,DK
+PL07SH236,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,6,Osmerus mordax,3.97,Software,DK
+SH-A02-02,LARGHA,4,NonPup,M,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,4,Osmerus mordax,4.62,Software,DK
+SH-R03-00,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,6,Osmerus mordax,4.06,Software,DK
+SH-R03-00,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,7,Osmerus mordax,4.08,Software,DK
+SH-R03-00,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,8,Osmerus mordax,4.43,Software,DK
+SH-R03-00,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,9,Osmerus mordax,3.87,Software,DK
+SH-R03-00,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,10,Osmerus mordax,3.91,Software,DK
+PL07SH235,LARGHA,0,Pup,F,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,1,Osmerus mordax,7.12,Software,DK
+SH-A02-02,LARGHA,4,NonPup,M,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,1,Osmerus mordax,6.44,Software,DK
+PL18SH076,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,SEP,9,Summer,8,Osmerus mordax,6.12,Software,DK
+SH-A02-02,LARGHA,4,NonPup,M,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,3,Osmerus mordax,5.27,Software,DK
+PL18SH076,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,SEP,9,Summer,7,Osmerus mordax,6.04,Software,DK
+SH-A02-02,LARGHA,4,NonPup,M,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,5,Osmerus mordax,5.69,Software,DK
+SH-A02-02,LARGHA,4,NonPup,M,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,6,Osmerus mordax,6.03,Software,DK
+PL18SH076,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,SEP,9,Summer,1,Osmerus mordax,4.68,Software,DK
+SH-S17-03,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,4,Osmerus mordax,2.38,Software,DK
+PL18SH076,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,SEP,9,Summer,3,Osmerus mordax,5.36,Software,DK
+SH-R02-00,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,10,Osmerus mordax,3.14,Software,DK
+PL18SH076,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,SEP,9,Summer,5,Osmerus mordax,6.86,Software,DK
+SH-R03-00,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,5,Osmerus mordax,4.11,Software,DK
+SH-A02-02,LARGHA,4,NonPup,M,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,2,Osmerus mordax,5.2,Software,DK
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,6,Osmerus mordax,3.02,Software,DK/AS
+PL06HB002,LARGHA,7,NonPup,M,Hooper Bay,Bering Sea,2006,MAR,3,Winter,4,Osmerus mordax,4.48,Software,DK/AS
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,6,Osmerus mordax,2.88,Software,DK/AS
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,7,Osmerus mordax,3.3,Software,DK/AS
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,8,Osmerus mordax,2.7,Software,DK/AS
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,1,Osmerus mordax,3.58,Software,DK/AS
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,2,Osmerus mordax,3.42,Software,DK/AS
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,3,Osmerus mordax,3.23,Software,DK/AS
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,4,Osmerus mordax,2.57,Software,DK/AS
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,5,Osmerus mordax,3.32,Software,DK/AS
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,3,Osmerus mordax,2.65,Software,DK/AS
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,7,Osmerus mordax,2.9,Software,DK/AS
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,8,Osmerus mordax,3.24,Software,DK/AS
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,9,Osmerus mordax,3.42,Software,DK/AS
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,10,Osmerus mordax,3.19,Software,DK/AS
+PL06HB002,LARGHA,7,NonPup,M,Hooper Bay,Bering Sea,2006,MAR,3,Winter,1,Osmerus mordax,4.33,Software,DK/AS
+PL06HB002,LARGHA,7,NonPup,M,Hooper Bay,Bering Sea,2006,MAR,3,Winter,2,Osmerus mordax,5.76,Software,DK/AS
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,2,Osmerus mordax,6.56,Software,DK
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,4,Osmerus mordax,3.29,Software,DK/AS
+PL18SH095,LARGHA,16,NonPup,M,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,3,Osmerus mordax,3.15,Software,DK
+SH-R10-00,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,7,Osmerus mordax,3.22,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,13,Osmerus mordax,5.46,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,14,Osmerus mordax,6.09,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,15,Osmerus mordax,5.46,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,16,Osmerus mordax,6.19,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,17,Osmerus mordax,5.15,Software,DK
+PL19SH070,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,1,Osmerus mordax,5.35,Software,DK/AS
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,5,Osmerus mordax,3.6,Software,DK/AS
+PL19SH070,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,3,Osmerus mordax,5.37,Software,DK/AS
+PL17GAM094,LARGHA,26,NonPup,M,Gambell,Bering Sea,2017,DEC,12,Winter,1,Osmerus mordax,2.39,Software,DK/AS
+PL19SH070,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,4,Osmerus mordax,5.76,Software,DK/AS
+PL19SH070,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,5,Osmerus mordax,5.7,Software,DK/AS
+PL19SH070,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,6,Osmerus mordax,5.19,Software,DK/AS
+PL19SH070,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,7,Osmerus mordax,5.76,Software,DK/AS
+PL19SH070,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,8,Osmerus mordax,5.47,Software,DK/AS
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,1,Osmerus mordax,2.84,Software,DK/AS
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,2,Osmerus mordax,2.58,Software,DK/AS
+PL19SH070,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,2,Osmerus mordax,5.45,Software,DK/AS
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,9,Osmerus mordax,5.5,Software,DK
+PL06HB002,LARGHA,7,NonPup,M,Hooper Bay,Bering Sea,2006,MAR,3,Winter,3,Osmerus mordax,3.06,Software,DK/AS
+SH-R02-00,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,9,Osmerus mordax,5.48,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,1,Osmerus mordax,5.18,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,3,Osmerus mordax,6.19,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,4,Osmerus mordax,6.96,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,5,Osmerus mordax,5.9,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,6,Osmerus mordax,5.48,Software,DK
+SH-R02-00,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,7,Osmerus mordax,4.04,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,8,Osmerus mordax,6.08,Software,DK
+SH-R02-00,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,6,Osmerus mordax,1.95,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,10,Osmerus mordax,6.26,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,11,Osmerus mordax,7.1,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,18,Osmerus mordax,5.03,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,19,Osmerus mordax,5.82,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,20,Osmerus mordax,5.55,Software,DK
+SH-S17-03,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,1,Osmerus mordax,3.9,Software,DK
+SH-S17-03,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,2,Osmerus mordax,2.59,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,7,Osmerus mordax,5.5,Software,DK
+PL09HB002,LARGHA,6,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,2,Osmerus mordax,3,Software,DK
+PH06HB001,LARGHA,8,NonPup,F,Hooper Bay,Bering Sea,2006,MAR,3,Winter,1,Osmerus mordax,3.27,Software,AS
+PL19HB001,LARGHA,9,NonPup,F,Hooper Bay,Bering Sea,2019,MAR,3,Winter,1,Osmerus mordax,3.26,Software,DK/AS
+PL19HB001,LARGHA,9,NonPup,F,Hooper Bay,Bering Sea,2019,MAR,3,Winter,2,Osmerus mordax,3.52,Software,DK/AS
+PL19HB001,LARGHA,9,NonPup,F,Hooper Bay,Bering Sea,2019,MAR,3,Winter,3,Osmerus mordax,3.5,Software,DK/AS
+PL19HB001,LARGHA,9,NonPup,F,Hooper Bay,Bering Sea,2019,MAR,3,Winter,4,Osmerus mordax,3.4,Software,DK/AS
+PL19HB001,LARGHA,9,NonPup,F,Hooper Bay,Bering Sea,2019,MAR,3,Winter,5,Osmerus mordax,3.53,Software,DK/AS
+PL19HB001,LARGHA,9,NonPup,F,Hooper Bay,Bering Sea,2019,MAR,3,Winter,6,Osmerus mordax,3.44,Software,DK/AS
+SH-R02-00,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,8,Osmerus mordax,5.26,Software,DK
+PL09HB002,LARGHA,6,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,1,Osmerus mordax,3.15,Software,DK
+SH-S17-03,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,3,Osmerus mordax,4.08,Software,DK
+PL09HB002,LARGHA,6,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,3,Osmerus mordax,2.78,Software,DK
+HB-017-03,LARGHA,3,NonPup,F,Hooper Bay,Bering Sea,2003,FEB,2,Winter,1,Osmerus mordax,2.9,Software,DK
+SH-R02-00,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,1,Osmerus mordax,4.63,Software,DK
+SH-R02-00,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,2,Osmerus mordax,3.23,Software,DK
+SH-R02-00,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,3,Osmerus mordax,3.59,Software,DK
+SH-R02-00,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,4,Osmerus mordax,3.96,Software,DK
+SH-R02-00,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,5,Osmerus mordax,3.05,Software,DK
+PL19HB001,LARGHA,9,NonPup,F,Hooper Bay,Bering Sea,2019,MAR,3,Winter,7,Osmerus mordax,3.45,Software,DK/AS
+PL08SH077,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,5,Osmerus mordax,6.29,Software,DK
+PL17SH081,LARGHA,13,NonPup,F,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,3,Osmerus mordax,4.12,Software,DK
+PL18SH102,LARGHA,9,NonPup,U,Shishmaref,Chukchi Sea,2018,OCT,10,Summer,5,Osmerus mordax,5.15,Software,AS
+PL18SH102,LARGHA,9,NonPup,U,Shishmaref,Chukchi Sea,2018,OCT,10,Summer,6,Osmerus mordax,5.63,Software,AS
+PL18SH102,LARGHA,9,NonPup,U,Shishmaref,Chukchi Sea,2018,OCT,10,Summer,7,Osmerus mordax,4.67,Software,AS
+PL18SH102,LARGHA,9,NonPup,U,Shishmaref,Chukchi Sea,2018,OCT,10,Summer,8,Osmerus mordax,6.53,Software,AS
+PL08SH077,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,1,Osmerus mordax,3,Software,DK
+PL08SH077,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,2,Osmerus mordax,3.12,Software,DK
+PL18SH102,LARGHA,9,NonPup,U,Shishmaref,Chukchi Sea,2018,OCT,10,Summer,3,Osmerus mordax,6.65,Software,AS
+PL08SH077,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,4,Osmerus mordax,5.59,Software,DK
+PL18SH102,LARGHA,9,NonPup,U,Shishmaref,Chukchi Sea,2018,OCT,10,Summer,2,Osmerus mordax,6.44,Software,AS
+PL10SH155,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2010,OCT,10,Summer,1,Osmerus mordax,3.82,Software,DK
+PL10SH155,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2010,OCT,10,Summer,2,Osmerus mordax,3.6,Software,DK
+PL10SH155,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2010,OCT,10,Summer,3,Osmerus mordax,4.73,Software,DK
+PL10SH155,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2010,OCT,10,Summer,4,Osmerus mordax,3.93,Software,DK
+PL10SH155,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2010,OCT,10,Summer,5,Osmerus mordax,4.34,Software,DK
+PL17SH081,LARGHA,13,NonPup,F,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,1,Osmerus mordax,5.95,Software,DK
+PL07SH207,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,7,Osmerus mordax,7.05,Software,DK
+PL08SH077,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,3,Osmerus mordax,3.98,Software,DK
+PL18SH069,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,1,Osmerus mordax,5.75,Software,AS
+PL18SH095,LARGHA,16,NonPup,M,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,1,Osmerus mordax,3.4,Software,DK
+PL07SH246,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,1,Osmerus mordax,6.02,Software,AS
+PL07SH246,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,2,Osmerus mordax,5.43,Software,AS
+PL07SH246,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,3,Osmerus mordax,5.22,Software,AS
+PL07SH246,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,4,Osmerus mordax,5.56,Software,AS
+PL07SH246,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,5,Osmerus mordax,4.94,Software,AS
+PL07SH246,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,6,Osmerus mordax,5.83,Software,AS
+PL18SH102,LARGHA,9,NonPup,U,Shishmaref,Chukchi Sea,2018,OCT,10,Summer,4,Osmerus mordax,5.89,Software,AS
+PL07SH246,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,8,Osmerus mordax,5.07,Software,AS
+PL17SH081,LARGHA,13,NonPup,F,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,4,Osmerus mordax,4.69,Software,DK
+PL18SH069,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,2,Osmerus mordax,5.72,Software,AS
+PL18SH069,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,3,Osmerus mordax,4.09,Software,AS
+PL18SH069,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,4,Osmerus mordax,2.7,Software,AS
+PL18SH069,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,5,Osmerus mordax,5.67,Software,AS
+PL18SH069,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,6,Osmerus mordax,4.36,Software,AS
+PL18SH069,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,7,Osmerus mordax,4.45,Software,AS
+PL18SH102,LARGHA,9,NonPup,U,Shishmaref,Chukchi Sea,2018,OCT,10,Summer,1,Osmerus mordax,5.6,Software,AS
+PL07SH246,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,7,Osmerus mordax,5.42,Software,AS
+PL18SH095,LARGHA,16,NonPup,M,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,4,Osmerus mordax,3.34,Software,DK
+PL17SH081,LARGHA,13,NonPup,F,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,2,Osmerus mordax,4.21,Software,DK
+PL09SH132,LARGHA,3,NonPup,U,Shishmaref,Chukchi Sea,2009,SEP,9,Summer,4,Osmerus mordax,5.43,Software,DK
+PL09SH132,LARGHA,3,NonPup,U,Shishmaref,Chukchi Sea,2009,SEP,9,Summer,5,Osmerus mordax,6.72,Software,DK
+PL09SH245,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2009,OCT,10,Summer,1,Osmerus mordax,2.83,Software,DK
+PL09SH245,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2009,OCT,10,Summer,2,Osmerus mordax,2.06,Software,DK
+PL09SH245,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2009,OCT,10,Summer,3,Osmerus mordax,2.58,Software,DK
+PL09SH245,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2009,OCT,10,Summer,4,Osmerus mordax,2.61,Software,DK
+PL09SH132,LARGHA,3,NonPup,U,Shishmaref,Chukchi Sea,2009,SEP,9,Summer,2,Osmerus mordax,5.47,Software,DK
+PL18SH095,LARGHA,16,NonPup,M,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,2,Osmerus mordax,3.3,Software,DK
+PL09SH132,LARGHA,3,NonPup,U,Shishmaref,Chukchi Sea,2009,SEP,9,Summer,1,Osmerus mordax,5.74,Software,DK
+PL18SH095,LARGHA,16,NonPup,M,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,5,Osmerus mordax,3.75,Software,DK
+PL18SH056,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2018,OCT,10,Summer,1,Osmerus mordax,4.77,Software,DK
+PL18SH056,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2018,OCT,10,Summer,2,Osmerus mordax,5.68,Software,DK
+PL18SH056,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2018,OCT,10,Summer,3,Osmerus mordax,5.9,Software,DK
+PL18SH056,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2018,OCT,10,Summer,4,Osmerus mordax,6.05,Software,DK
+PL18SH056,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2018,OCT,10,Summer,5,Osmerus mordax,5.04,Software,DK
+PL18SH056,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2018,OCT,10,Summer,6,Osmerus mordax,5.64,Software,DK
+PL17SH152,LARGHA,8,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,12,Osmerus mordax,6.35,Software,DK
+PL18SH106,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,3,Osmerus mordax,3.32,Software,DK
+PL17SH081,LARGHA,13,NonPup,F,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,5,Osmerus mordax,5.27,Software,DK
+PL17SH081,LARGHA,13,NonPup,F,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,6,Osmerus mordax,6.14,Software,DK
+PL10SH235,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2010,OCT,10,Summer,1,Osmerus mordax,2.57,Software,DK
+PL10SH235,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2010,OCT,10,Summer,2,Osmerus mordax,2.46,Software,DK
+PL10SH235,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2010,OCT,10,Summer,3,Osmerus mordax,2.51,Software,DK
+PL10SH235,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2010,OCT,10,Summer,4,Osmerus mordax,2.3,Software,DK
+PL10SH235,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2010,OCT,10,Summer,5,Osmerus mordax,2.49,Software,DK
+PL09SH132,LARGHA,3,NonPup,U,Shishmaref,Chukchi Sea,2009,SEP,9,Summer,3,Osmerus mordax,5.83,Software,DK
+PL18SH106,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,2,Osmerus mordax,6.46,Software,DK
+PL07SH207,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,6,Osmerus mordax,7.39,Software,DK
+PL18SH106,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,4,Osmerus mordax,5.93,Software,DK
+PL18SH106,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,5,Osmerus mordax,5.07,Software,DK
+PL14SH214,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2014,NOV,11,Summer,1,Osmerus mordax,4.32,Software,DK
+PL14SH214,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2014,NOV,11,Summer,2,Osmerus mordax,2.27,Software,DK
+PL14SH214,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2014,NOV,11,Summer,3,Osmerus mordax,2.41,Software,DK
+PL14SH214,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2014,NOV,11,Summer,4,Osmerus mordax,2.72,Software,DK
+PL14SH214,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2014,NOV,11,Summer,5,Osmerus mordax,3,Software,DK
+PL18SH106,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2018,NOV,11,Summer,1,Osmerus mordax,3.42,Software,DK
+PL07SH237,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,9,Osmerus mordax,4.78,Software,DK
+SH-S22-04,LARGHA,12,NonPup,U,Shishmaref,Chukchi Sea,2004,OCT,10,Summer,7,Osmerus mordax,6.11,Software,DK
+PL07SH237,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,1,Osmerus mordax,6.04,Software,DK
+PL07SH237,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,2,Osmerus mordax,5.25,Software,DK
+PL07SH237,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,3,Osmerus mordax,6.23,Software,DK
+PL07SH237,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,4,Osmerus mordax,5.81,Software,DK
+PL07SH237,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,5,Osmerus mordax,5,Software,DK
+PL07SH237,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,6,Osmerus mordax,5.01,Software,DK
+SH-M03-06,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2006,SEP,9,Summer,9,Osmerus mordax,6.14,Software,DK
+PL07SH237,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,8,Osmerus mordax,5.73,Software,DK
+SH-M03-06,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2006,SEP,9,Summer,8,Osmerus mordax,6.04,Software,DK
+PL07SH237,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,10,Osmerus mordax,4.92,Software,DK
+SH-S22-04,LARGHA,12,NonPup,U,Shishmaref,Chukchi Sea,2004,OCT,10,Summer,1,Osmerus mordax,5.78,Software,DK
+SH-S22-04,LARGHA,12,NonPup,U,Shishmaref,Chukchi Sea,2004,OCT,10,Summer,2,Osmerus mordax,5.17,Software,DK
+SH-S22-04,LARGHA,12,NonPup,U,Shishmaref,Chukchi Sea,2004,OCT,10,Summer,3,Osmerus mordax,5.22,Software,DK
+SH-S22-04,LARGHA,12,NonPup,U,Shishmaref,Chukchi Sea,2004,OCT,10,Summer,4,Osmerus mordax,4.39,Software,DK
+SH-S22-04,LARGHA,12,NonPup,U,Shishmaref,Chukchi Sea,2004,OCT,10,Summer,5,Osmerus mordax,5.89,Software,DK
+PL07SH207,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,8,Osmerus mordax,6.17,Software,DK
+PL07SH237,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,7,Osmerus mordax,3.77,Software,DK
+PL19SH068,LARGHA,2,NonPup,U,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,10,Osmerus mordax,4.85,Software,DK
+PL19SH068,LARGHA,2,NonPup,U,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,1,Osmerus mordax,4.12,Software,DK
+PL19SH068,LARGHA,2,NonPup,U,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,2,Osmerus mordax,4.09,Software,DK
+PL19SH068,LARGHA,2,NonPup,U,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,3,Osmerus mordax,5.01,Software,DK
+PL19SH068,LARGHA,2,NonPup,U,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,4,Osmerus mordax,4.03,Software,DK
+PL19SH068,LARGHA,2,NonPup,U,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,5,Osmerus mordax,4.25,Software,DK
+PL19SH068,LARGHA,2,NonPup,U,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,6,Osmerus mordax,5.91,Software,DK
+PL19SH068,LARGHA,2,NonPup,U,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,7,Osmerus mordax,4.01,Software,DK
+SH-M03-06,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2006,SEP,9,Summer,10,Osmerus mordax,5.73,Software,DK
+PL19SH068,LARGHA,2,NonPup,U,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,9,Osmerus mordax,3.4,Software,DK
+SH-S22-04,LARGHA,12,NonPup,U,Shishmaref,Chukchi Sea,2004,OCT,10,Summer,8,Osmerus mordax,5.36,Software,DK
+SH-M03-06,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2006,SEP,9,Summer,1,Osmerus mordax,5.29,Software,DK
+SH-M03-06,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2006,SEP,9,Summer,2,Osmerus mordax,4.93,Software,DK
+SH-M03-06,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2006,SEP,9,Summer,3,Osmerus mordax,5.31,Software,DK
+SH-M03-06,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2006,SEP,9,Summer,4,Osmerus mordax,4.75,Software,DK
+SH-M03-06,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2006,SEP,9,Summer,5,Osmerus mordax,5.6,Software,DK
+SH-M03-06,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2006,SEP,9,Summer,6,Osmerus mordax,4.86,Software,DK
+SH-M03-06,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2006,SEP,9,Summer,7,Osmerus mordax,5.18,Software,DK
+PL19SH068,LARGHA,2,NonPup,U,Shishmaref,Chukchi Sea,2019,OCT,10,Summer,8,Osmerus mordax,4.07,Software,DK
+SH-G11-02,LARGHA,11,NonPup,M,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,5,Osmerus mordax,4.8,Software,DK
+SH-S22-04,LARGHA,12,NonPup,U,Shishmaref,Chukchi Sea,2004,OCT,10,Summer,6,Osmerus mordax,4.81,Software,DK
+PL08SH177,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,5,Osmerus mordax,3.04,Software,DK
+PL08SH177,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,6,Osmerus mordax,2.93,Software,DK
+PL08SH177,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,7,Osmerus mordax,2.79,Software,DK
+PL08SH177,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,8,Osmerus mordax,2.77,Software,DK
+SH-G11-02,LARGHA,11,NonPup,M,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,1,Osmerus mordax,5.09,Software,DK
+SH-G11-02,LARGHA,11,NonPup,M,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,2,Osmerus mordax,5.66,Software,DK
+PL08SH177,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,3,Osmerus mordax,2.61,Software,DK
+SH-G11-02,LARGHA,11,NonPup,M,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,4,Osmerus mordax,5.62,Software,DK
+PL08SH177,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,2,Osmerus mordax,2.77,Software,DK
+SH-G11-02,LARGHA,11,NonPup,M,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,6,Osmerus mordax,5.26,Software,DK
+PL07SH224,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,1,Osmerus mordax,4.67,Software,DK
+PL07SH207,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,1,Osmerus mordax,7.78,Software,DK
+PL07SH207,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,2,Osmerus mordax,6.71,Software,DK
+PL07SH207,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,3,Osmerus mordax,5.09,Software,DK
+PL07SH207,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,4,Osmerus mordax,5.6,Software,DK
+PL07SH207,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2007,OCT,10,Summer,5,Osmerus mordax,6.67,Software,DK
+SH-G11-02,LARGHA,11,NonPup,M,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,3,Osmerus mordax,4.12,Software,DK
+SH-S13-03,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,2,Osmerus mordax,6.03,Software,DK
+SH-S22-04,LARGHA,12,NonPup,U,Shishmaref,Chukchi Sea,2004,OCT,10,Summer,9,Osmerus mordax,5.06,Software,DK
+PL13SH165,LARGHA,24,NonPup,M,Shishmaref,Chukchi Sea,2013,OCT,10,Summer,1,Osmerus mordax,4.9,Software,DK
+PL13SH165,LARGHA,24,NonPup,M,Shishmaref,Chukchi Sea,2013,OCT,10,Summer,2,Osmerus mordax,4.22,Software,DK
+SH-R04-00,LARGHA,4,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,1,Osmerus mordax,6.08,Software,DK
+SH-R04-00,LARGHA,4,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,2,Osmerus mordax,5.28,Software,DK
+SH-R04-00,LARGHA,4,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,3,Osmerus mordax,4.65,Software,DK
+SH-R04-00,LARGHA,4,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,4,Osmerus mordax,6.78,Software,DK
+PL08SH177,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,4,Osmerus mordax,2.84,Software,DK
+SH-S13-03,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,1,Osmerus mordax,6.68,Software,DK
+SH-R10-00,LARGHA,3,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,8,Osmerus mordax,3.1,Software,DK
+SH-S13-03,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,3,Osmerus mordax,5.47,Software,DK
+SH-S13-03,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,4,Osmerus mordax,4.74,Software,DK
+SH-S13-03,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,5,Osmerus mordax,5.47,Software,DK
+PL07SH228,LARGHA,0,Pup,F,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,1,Osmerus mordax,4.19,Software,DK
+PL07SH228,LARGHA,0,Pup,F,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,2,Osmerus mordax,5.63,Software,DK
+PL07SH228,LARGHA,0,Pup,F,Shishmaref,Chukchi Sea,2007,NOV,11,Summer,3,Osmerus mordax,4.69,Software,DK
+PL08SH177,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,1,Osmerus mordax,2.7,Software,DK
+SH-R04-00,LARGHA,4,NonPup,M,Shishmaref,Chukchi Sea,2000,OCT,10,Summer,5,Osmerus mordax,3.56,Software,DK
+PH06HB001,LARGHA,8,NonPup,F,Hooper Bay,Bering Sea,2006,MAR,3,Winter,3,Eleginus gracilis,6.13,Software,DK
+PL19GAM054,LARGHA,0,Pup,M,Gambell,Bering Sea,2019,DEC,12,Winter,2,Eleginus gracilis,5.38,Software,DK
+PL09HB002,LARGHA,6,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,3,Eleginus gracilis,9.73,Software,DK
+PL09HB002,LARGHA,6,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,2,Eleginus gracilis,9.11,Software,DK
+PL09HB002,LARGHA,6,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,1,Eleginus gracilis,5.4,Software,DK
+PL19HB001,LARGHA,9,NonPup,F,Hooper Bay,Bering Sea,2019,MAR,3,Winter,6,Eleginus gracilis,6.64,Software,DK
+PL19HB001,LARGHA,9,NonPup,F,Hooper Bay,Bering Sea,2019,MAR,3,Winter,5,Eleginus gracilis,6.67,Software,DK
+PL19HB001,LARGHA,9,NonPup,F,Hooper Bay,Bering Sea,2019,MAR,3,Winter,4,Eleginus gracilis,6.11,Software,DK
+PL19HB001,LARGHA,9,NonPup,F,Hooper Bay,Bering Sea,2019,MAR,3,Winter,3,Eleginus gracilis,6.05,Software,DK
+PL19HB001,LARGHA,9,NonPup,F,Hooper Bay,Bering Sea,2019,MAR,3,Winter,2,Eleginus gracilis,6.67,Software,DK
+HB-017-03,LARGHA,3,NonPup,F,Hooper Bay,Bering Sea,2003,FEB,2,Winter,2,Eleginus gracilis,4.82,Software,DK
+PH06HB001,LARGHA,8,NonPup,F,Hooper Bay,Bering Sea,2006,MAR,3,Winter,4,Eleginus gracilis,5.26,Software,DK
+PL19GAM004,LARGHA,7,NonPup,M,Gambell,Bering Sea,2019,FEB,2,Winter,1,Eleginus gracilis,11.76,Software,DK
+PH06HB001,LARGHA,8,NonPup,F,Hooper Bay,Bering Sea,2006,MAR,3,Winter,2,Eleginus gracilis,6.03,Software,DK
+PH06HB001,LARGHA,8,NonPup,F,Hooper Bay,Bering Sea,2006,MAR,3,Winter,1,Eleginus gracilis,5.66,Software,DK
+PL19GAM054,LARGHA,0,Pup,M,Gambell,Bering Sea,2019,DEC,12,Winter,10,Eleginus gracilis,9.4,Software,DK
+PL19GAM054,LARGHA,0,Pup,M,Gambell,Bering Sea,2019,DEC,12,Winter,9,Eleginus gracilis,6.45,Software,DK
+PL19GAM054,LARGHA,0,Pup,M,Gambell,Bering Sea,2019,DEC,12,Winter,8,Eleginus gracilis,6,Software,DK
+PL19GAM054,LARGHA,0,Pup,M,Gambell,Bering Sea,2019,DEC,12,Winter,7,Eleginus gracilis,6.5,Software,DK
+PL19GAM054,LARGHA,0,Pup,M,Gambell,Bering Sea,2019,DEC,12,Winter,6,Eleginus gracilis,7.28,Software,DK
+PL19GAM054,LARGHA,0,Pup,M,Gambell,Bering Sea,2019,DEC,12,Winter,5,Eleginus gracilis,5.42,Software,DK
+PL19GAM054,LARGHA,0,Pup,M,Gambell,Bering Sea,2019,DEC,12,Winter,4,Eleginus gracilis,6.18,Software,DK
+PL07GAM208,LARGHA,0,Pup,M,Gambell,Bering Sea,2007,DEC,12,Winter,1,Eleginus gracilis,6.17,Software,DK
+PL19HB001,LARGHA,9,NonPup,F,Hooper Bay,Bering Sea,2019,MAR,3,Winter,1,Eleginus gracilis,7.31,Software,DK
+PL10HB001,LARGHA,16,NonPup,F,Hooper Bay,Bering Sea,2010,FEB,2,Winter,8,Eleginus gracilis,14.07,Software,DK
+PL07GAM205,LARGHA,6,NonPup,M,Gambell,Bering Sea,2007,DEC,12,Winter,1,Eleginus gracilis,6.73,Software,DK
+PL17GAM091,LARGHA,4,NonPup,M,Gambell,Bering Sea,2017,DEC,12,Winter,2,Eleginus gracilis,5.81,Software,DK
+PL17GAM091,LARGHA,4,NonPup,M,Gambell,Bering Sea,2017,DEC,12,Winter,1,Eleginus gracilis,4.74,Software,DK
+HB-001-04,LARGHA,21,NonPup,M,Hooper Bay,Bering Sea,2004,JAN,1,Winter,1,Eleginus gracilis,13.88,Software,DK
+PL07GAM206,LARGHA,7,NonPup,M,Gambell,Bering Sea,2007,DEC,12,Winter,5,Eleginus gracilis,12.74,Software,DK
+PL07GAM206,LARGHA,7,NonPup,M,Gambell,Bering Sea,2007,DEC,12,Winter,4,Eleginus gracilis,10.29,Software,DK
+PL07GAM206,LARGHA,7,NonPup,M,Gambell,Bering Sea,2007,DEC,12,Winter,3,Eleginus gracilis,6.14,Software,DK
+PL07GAM206,LARGHA,7,NonPup,M,Gambell,Bering Sea,2007,DEC,12,Winter,2,Eleginus gracilis,6.3,Software,DK
+PL07GAM206,LARGHA,7,NonPup,M,Gambell,Bering Sea,2007,DEC,12,Winter,1,Eleginus gracilis,6.35,Software,DK
+HB-017-03,LARGHA,3,NonPup,F,Hooper Bay,Bering Sea,2003,FEB,2,Winter,1,Eleginus gracilis,5.53,Software,DK
+PL10HB001,LARGHA,16,NonPup,F,Hooper Bay,Bering Sea,2010,FEB,2,Winter,9,Eleginus gracilis,12.49,Software,DK
+PL19GAM054,LARGHA,0,Pup,M,Gambell,Bering Sea,2019,DEC,12,Winter,1,Eleginus gracilis,7.03,Software,DK
+PL10HB001,LARGHA,16,NonPup,F,Hooper Bay,Bering Sea,2010,FEB,2,Winter,7,Eleginus gracilis,14.86,Software,DK
+PL10HB001,LARGHA,16,NonPup,F,Hooper Bay,Bering Sea,2010,FEB,2,Winter,6,Eleginus gracilis,13.87,Software,DK
+PL10HB001,LARGHA,16,NonPup,F,Hooper Bay,Bering Sea,2010,FEB,2,Winter,5,Eleginus gracilis,13.87,Software,DK
+PL10HB001,LARGHA,16,NonPup,F,Hooper Bay,Bering Sea,2010,FEB,2,Winter,4,Eleginus gracilis,13.32,Software,DK
+PL10HB001,LARGHA,16,NonPup,F,Hooper Bay,Bering Sea,2010,FEB,2,Winter,3,Eleginus gracilis,13.56,Software,DK
+PL10HB001,LARGHA,16,NonPup,F,Hooper Bay,Bering Sea,2010,FEB,2,Winter,2,Eleginus gracilis,14.37,Software,DK
+PL10HB001,LARGHA,16,NonPup,F,Hooper Bay,Bering Sea,2010,FEB,2,Winter,1,Eleginus gracilis,12.34,Software,DK
+PL19GAM004,LARGHA,7,NonPup,M,Gambell,Bering Sea,2019,FEB,2,Winter,4,Eleginus gracilis,10.5,Software,DK
+PL19GAM004,LARGHA,7,NonPup,M,Gambell,Bering Sea,2019,FEB,2,Winter,3,Eleginus gracilis,11.84,Software,DK
+PL19GAM004,LARGHA,7,NonPup,M,Gambell,Bering Sea,2019,FEB,2,Winter,2,Eleginus gracilis,12.14,Software,DK
+PL10HB001,LARGHA,16,NonPup,F,Hooper Bay,Bering Sea,2010,FEB,2,Winter,10,Eleginus gracilis,12.55,Software,DK
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,6,Eleginus gracilis,5,Software,DK
+PL19GAM054,LARGHA,0,Pup,M,Gambell,Bering Sea,2019,DEC,12,Winter,3,Eleginus gracilis,6.27,Software,DK
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,6,Eleginus gracilis,6.15,Software,DK
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,5,Eleginus gracilis,5.92,Software,DK
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,4,Eleginus gracilis,5.82,Software,DK
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,3,Eleginus gracilis,6.06,Software,DK
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,2,Eleginus gracilis,6.01,Software,DK
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,1,Eleginus gracilis,6.18,Software,DK
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,10,Eleginus gracilis,14.66,Software,DK
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,9,Eleginus gracilis,11.69,Software,DK
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,8,Eleginus gracilis,6.81,Software,DK
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,7,Eleginus gracilis,5.07,Software,DK
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,9,Eleginus gracilis,5.77,Software,DK
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,5,Eleginus gracilis,5.8,Software,DK
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,4,Eleginus gracilis,5.16,Software,DK
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,3,Eleginus gracilis,7.15,Software,DK
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,2,Eleginus gracilis,11.26,Software,DK
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,1,Eleginus gracilis,10.52,Software,DK
+PL19GAM002,LARGHA,3,NonPup,F,Gambell,Bering Sea,2019,FEB,2,Winter,5,Eleginus gracilis,13.02,Software,DK
+PL19GAM002,LARGHA,3,NonPup,F,Gambell,Bering Sea,2019,FEB,2,Winter,4,Eleginus gracilis,18.68,Software,DK
+PL19GAM002,LARGHA,3,NonPup,F,Gambell,Bering Sea,2019,FEB,2,Winter,3,Eleginus gracilis,16.37,Software,DK
+PL19GAM002,LARGHA,3,NonPup,F,Gambell,Bering Sea,2019,FEB,2,Winter,2,Eleginus gracilis,14.5,Software,DK
+PL19GAM002,LARGHA,3,NonPup,F,Gambell,Bering Sea,2019,FEB,2,Winter,1,Eleginus gracilis,16.76,Software,DK
+PL09HB001,LARGHA,20,NonPup,M,Hooper Bay,Bering Sea,2009,JAN,1,Winter,8,Eleginus gracilis,5.64,Software,DK
+PL17GAM094,LARGHA,26,NonPup,M,Gambell,Bering Sea,2017,DEC,12,Winter,1,Eleginus gracilis,11.5,Software,DK
+PL08HB001,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2008,FEB,2,Winter,4,Eleginus gracilis,7.45,Software,DK
+PL08HB001,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2008,FEB,2,Winter,3,Eleginus gracilis,7.06,Software,DK
+PL08HB001,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2008,FEB,2,Winter,2,Eleginus gracilis,6.65,Software,DK
+PL08HB001,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2008,FEB,2,Winter,1,Eleginus gracilis,6.17,Software,DK
+PL17GAM094,LARGHA,26,NonPup,M,Gambell,Bering Sea,2017,DEC,12,Winter,8,Eleginus gracilis,14.23,Software,DK
+PL17GAM094,LARGHA,26,NonPup,M,Gambell,Bering Sea,2017,DEC,12,Winter,7,Eleginus gracilis,14.22,Software,DK
+PL17GAM094,LARGHA,26,NonPup,M,Gambell,Bering Sea,2017,DEC,12,Winter,6,Eleginus gracilis,9.93,Software,DK
+PL17GAM094,LARGHA,26,NonPup,M,Gambell,Bering Sea,2017,DEC,12,Winter,5,Eleginus gracilis,10.72,Software,DK
+PL17GAM094,LARGHA,26,NonPup,M,Gambell,Bering Sea,2017,DEC,12,Winter,4,Eleginus gracilis,12.3,Software,DK
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,7,Eleginus gracilis,5.79,Software,DK
+PL17GAM094,LARGHA,26,NonPup,M,Gambell,Bering Sea,2017,DEC,12,Winter,2,Eleginus gracilis,9.99,Software,DK
+HB-001-04,LARGHA,21,NonPup,M,Hooper Bay,Bering Sea,2004,JAN,1,Winter,2,Eleginus gracilis,10.75,Software,DK
+PL06HB002,LARGHA,7,NonPup,M,Hooper Bay,Bering Sea,2006,MAR,3,Winter,9,Eleginus gracilis,5.59,Software,DK
+PL06HB002,LARGHA,7,NonPup,M,Hooper Bay,Bering Sea,2006,MAR,3,Winter,8,Eleginus gracilis,6.85,Software,DK
+PL06HB002,LARGHA,7,NonPup,M,Hooper Bay,Bering Sea,2006,MAR,3,Winter,7,Eleginus gracilis,6.14,Software,DK
+PL06HB002,LARGHA,7,NonPup,M,Hooper Bay,Bering Sea,2006,MAR,3,Winter,6,Eleginus gracilis,6.32,Software,DK
+PL06HB002,LARGHA,7,NonPup,M,Hooper Bay,Bering Sea,2006,MAR,3,Winter,5,Eleginus gracilis,6.2,Software,DK
+PL06HB002,LARGHA,7,NonPup,M,Hooper Bay,Bering Sea,2006,MAR,3,Winter,4,Eleginus gracilis,5.98,Software,DK
+PL06HB002,LARGHA,7,NonPup,M,Hooper Bay,Bering Sea,2006,MAR,3,Winter,3,Eleginus gracilis,6.45,Software,DK
+PL06HB002,LARGHA,7,NonPup,M,Hooper Bay,Bering Sea,2006,MAR,3,Winter,2,Eleginus gracilis,5.72,Software,DK
+PL06HB002,LARGHA,7,NonPup,M,Hooper Bay,Bering Sea,2006,MAR,3,Winter,1,Eleginus gracilis,6.21,Software,DK
+HB-012-04,LARGHA,3,NonPup,M,Hooper Bay,Bering Sea,2004,MAR,3,Winter,10,Eleginus gracilis,6.56,Software,DK
+PL17GAM094,LARGHA,26,NonPup,M,Gambell,Bering Sea,2017,DEC,12,Winter,3,Eleginus gracilis,10,Software,DK
+PL07GAM206,LARGHA,7,NonPup,M,Gambell,Bering Sea,2007,DEC,12,Winter,6,Eleginus gracilis,11.32,Software,DK
+SH-S17-05,LARGHA,22,NonPup,M,Shishmaref,Chukchi Sea,2005,OCT,10,Summer,6,Limanda aspera,2.76,Software,LB/DK/AS
+SH-S17-05,LARGHA,22,NonPup,M,Shishmaref,Chukchi Sea,2005,OCT,10,Summer,5,Limanda aspera,2.8,Software,LB/DK/AS
+SH-S17-05,LARGHA,22,NonPup,M,Shishmaref,Chukchi Sea,2005,OCT,10,Summer,4,Limanda aspera,3.2,Software,LB/DK/AS
+SH-S17-05,LARGHA,22,NonPup,M,Shishmaref,Chukchi Sea,2005,OCT,10,Summer,3,Limanda aspera,3.34,Software,LB/DK/AS
+SH-S17-05,LARGHA,22,NonPup,M,Shishmaref,Chukchi Sea,2005,OCT,10,Summer,1,Limanda aspera,4.08,Software,LB/DK/AS
+PL09SH170,LARGHA,4,NonPup,F,Shishmaref,Chukchi Sea,2009,OCT,10,Summer,1,Limanda aspera,3.46,Software,DK
+SH-S17-04,LARGHA,5,NonPup,F,Shishmaref,Chukchi Sea,2004,JUN,6,Summer,1,Limanda aspera,4.93,Software,LB/DK/AS
+SH-S17-05,LARGHA,22,NonPup,M,Shishmaref,Chukchi Sea,2005,OCT,10,Summer,2,Limanda aspera,4.4,Software,LB/DK/AS
+SH-S17-05,LARGHA,22,NonPup,M,Shishmaref,Chukchi Sea,2005,OCT,10,Summer,7,Limanda aspera,3.35,Software,LB/DK/AS
+SH-S17-05,LARGHA,22,NonPup,M,Shishmaref,Chukchi Sea,2005,OCT,10,Summer,8,Limanda aspera,2.72,Software,LB/DK/AS
+SH-G08-02,LARGHA,24,NonPup,F,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,2,Limanda aspera,2.47,Software,DK
+SH-S17-05,LARGHA,22,NonPup,M,Shishmaref,Chukchi Sea,2005,OCT,10,Summer,10,Limanda aspera,2.92,Software,LB/DK/AS
+PL17SH137,LARGHA,2,NonPup,F,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,1,Limanda aspera,3.7,Software,DK
+SH-G08-02,LARGHA,24,NonPup,F,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,1,Limanda aspera,4.36,Software,DK
+PL11SH046,LARGHA,25,NonPup,M,Shishmaref,Chukchi Sea,2011,OCT,10,Summer,3,Limanda aspera,2.6,Software,DK
+PL17GAM072,LARGHA,0,Pup,F,Gambell,Bering Sea,2017,OCT,10,Summer,1,Limanda aspera,2.44,Software,DK
+SH-S17-05,LARGHA,22,NonPup,M,Shishmaref,Chukchi Sea,2005,OCT,10,Summer,9,Limanda aspera,2.68,Software,LB/DK/AS
+PL11SH083,LARGHA,2,NonPup,M,Shishmaref,Chukchi Sea,2011,AUG,8,Summer,1,Limanda aspera,4.52,Software,AS
+PL07GAM206,LARGHA,7,NonPup,M,Gambell,Bering Sea,2007,DEC,12,Winter,2,Limanda aspera,2.63,Software,DK
+SH-G08-02,LARGHA,24,NonPup,F,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,3,Limanda aspera,3.42,Software,DK
+PL17GAM070,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,1,Limanda aspera,3.08,Software,DK
+PL17GAM070,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,2,Limanda aspera,3.02,Software,DK
+PL17GAM074,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,1,Limanda aspera,2.4,Software,DK
+PL17GAM074,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,2,Limanda aspera,3.33,Software,DK
+SH-G30-03,LARGHA,16,NonPup,F,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,1,Limanda aspera,3.87,Software,AS
+PL17GAM072,LARGHA,0,Pup,F,Gambell,Bering Sea,2017,OCT,10,Summer,2,Limanda aspera,3.19,Software,DK
+PL11SH046,LARGHA,25,NonPup,M,Shishmaref,Chukchi Sea,2011,OCT,10,Summer,2,Limanda aspera,2.72,Software,DK
+PL09SH107,LARGHA,0,Pup,U,Shishmaref,Chukchi Sea,2009,OCT,10,Summer,1,Limanda aspera,3,Software,AS
+SH-G36-03,LARGHA,6,NonPup,M,Shishmaref,Chukchi Sea,2003,OCT,10,Summer,1,Limanda aspera,4.43,Software,LB
+SH-S20-04,LARGHA,14,NonPup,F,Shishmaref,Chukchi Sea,2004,OCT,10,Summer,1,Limanda aspera,3.65,Software,DK
+SH-M01-01,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2001,SEP,9,Summer,1,Limanda aspera,3.78,Software,DK
+PL11SH108,LARGHA,24,NonPup,F,Shishmaref,Chukchi Sea,2011,OCT,10,Summer,1,Limanda aspera,4.52,Software,DK
+PL11SH046,LARGHA,25,NonPup,M,Shishmaref,Chukchi Sea,2011,OCT,10,Summer,1,Limanda aspera,2.5,Software,DK
+PL19GAM054,LARGHA,0,Pup,M,Gambell,Bering Sea,2019,DEC,12,Winter,1,Limanda aspera,3.35,Software,DK
+PL09SH045,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2009,SEP,9,Summer,1,Limanda aspera,2.52,Software,DK
+PL10SH051,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2010,SEP,9,Summer,2,Limanda aspera,1.97,Software,LB/DK/AS
+PL10SH051,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2010,SEP,9,Summer,3,Limanda aspera,2.08,Software,LB/DK/AS
+PL10SH051,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2010,SEP,9,Summer,4,Limanda aspera,1.95,Software,LB/DK/AS
+PL10SH051,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2010,SEP,9,Summer,5,Limanda aspera,1.58,Software,LB/DK/AS
+PL10SH051,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2010,SEP,9,Summer,6,Limanda aspera,1.88,Software,LB/DK/AS
+PL10SH051,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2010,SEP,9,Summer,7,Limanda aspera,1.95,Software,LB/DK/AS
+PL10SH051,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2010,SEP,9,Summer,1,Limanda aspera,1.91,Software,LB/DK/AS
+PL14SH168,LARGHA,4,NonPup,U,Shishmaref,Chukchi Sea,2014,SEP,9,Summer,2,Limanda aspera,4.37,Software,DK
+PL14SH168,LARGHA,4,NonPup,U,Shishmaref,Chukchi Sea,2014,SEP,9,Summer,1,Limanda aspera,4.33,Software,DK
+PL09SH051,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2009,SEP,9,Summer,1,Limanda aspera,2.69,Software,DK
+PL14SH171,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2014,SEP,9,Summer,1,Limanda aspera,3.64,Software,DK
+PL10SH014,LARGHA,0,Pup,M,Shishmaref,Chukchi Sea,2010,OCT,10,Summer,1,Limanda aspera,3.36,Software,DK
+PL07GAM206,LARGHA,7,NonPup,M,Gambell,Bering Sea,2007,DEC,12,Winter,1,Limanda aspera,7.22,Software,DK
+PL08HB003,LARGHA,0,Pup,F,Hooper Bay,Bering Sea,2008,OCT,10,Summer,1,Limanda aspera,3.09,Software,DK
+SH-G08-02,LARGHA,24,NonPup,F,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,4,Limanda aspera,3.94,Software,DK
+PL10SH051,LARGHA,1,NonPup,F,Shishmaref,Chukchi Sea,2010,SEP,9,Summer,8,Limanda aspera,2.02,Software,LB/DK/AS
+PL08SH190,LARGHA,0,Pup,F,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,1,Limanda aspera,2.23,Software,LB/DK/AS
+PL09GAM010,LARGHA,0,Pup,M,Gambell,Bering Sea,2009,SEP,9,Summer,1,Limanda aspera,4.1,Software,DK
+SH-G08-02,LARGHA,24,NonPup,F,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,6,Limanda aspera,4.19,Software,DK
+PL08SH190,LARGHA,0,Pup,F,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,10,Limanda aspera,2.51,Software,LB/DK/AS
+SH-G08-02,LARGHA,24,NonPup,F,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,8,Limanda aspera,4.1,Software,DK
+SH-G08-02,LARGHA,24,NonPup,F,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,10,Limanda aspera,4.23,Software,DK
+SH-G08-02,LARGHA,24,NonPup,F,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,7,Limanda aspera,3.42,Software,DK
+SH-G08-02,LARGHA,24,NonPup,F,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,5,Limanda aspera,4.3,Software,DK
+PL08SH190,LARGHA,0,Pup,F,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,2,Limanda aspera,1.87,Software,LB/DK/AS
+PL08SH190,LARGHA,0,Pup,F,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,3,Limanda aspera,1.87,Software,LB/DK/AS
+PL08SH190,LARGHA,0,Pup,F,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,4,Limanda aspera,1.77,Software,LB/DK/AS
+PL08SH190,LARGHA,0,Pup,F,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,5,Limanda aspera,2.21,Software,LB/DK/AS
+PL08SH190,LARGHA,0,Pup,F,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,6,Limanda aspera,2.02,Software,LB/DK/AS
+PL08SH190,LARGHA,0,Pup,F,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,7,Limanda aspera,2.17,Software,LB/DK/AS
+PL08SH190,LARGHA,0,Pup,F,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,8,Limanda aspera,2.62,Software,LB/DK/AS
+PL08SH190,LARGHA,0,Pup,F,Shishmaref,Chukchi Sea,2008,OCT,10,Summer,9,Limanda aspera,2.56,Software,LB/DK/AS
+SH-G08-02,LARGHA,24,NonPup,F,Shishmaref,Chukchi Sea,2002,OCT,10,Summer,9,Limanda aspera,3.84,Software,DK
+PL14GAM141,LARGHA,0,Pup,F,Gambell,Bering Sea,2014,NOV,11,Summer,4,Gadus chalcogrammus,3.63,Software,DK
+PL17GAM092,LARGHA,8,NonPup,U,Gambell,Bering Sea,2017,NOV,11,Summer,4,Gadus chalcogrammus,20.56,Calipers,DK
+PL17GAM092,LARGHA,8,NonPup,U,Gambell,Bering Sea,2017,NOV,11,Summer,3,Gadus chalcogrammus,17.37,Calipers,DK
+PL17GAM092,LARGHA,8,NonPup,U,Gambell,Bering Sea,2017,NOV,11,Summer,2,Gadus chalcogrammus,18.53,Calipers,DK
+PL17GAM092,LARGHA,8,NonPup,U,Gambell,Bering Sea,2017,NOV,11,Summer,1,Gadus chalcogrammus,18.62,Calipers,DK
+PL12GAM043,LARGHA,0,Pup,F,Gambell,Bering Sea,2012,SEP,9,Summer,2,Gadus chalcogrammus,4.63,Software,DK
+PL12GAM043,LARGHA,0,Pup,F,Gambell,Bering Sea,2012,SEP,9,Summer,1,Gadus chalcogrammus,4.38,Software,DK
+PL14GAM141,LARGHA,0,Pup,F,Gambell,Bering Sea,2014,NOV,11,Summer,8,Gadus chalcogrammus,3.57,Software,DK
+PL14GAM141,LARGHA,0,Pup,F,Gambell,Bering Sea,2014,NOV,11,Summer,7,Gadus chalcogrammus,4.1,Software,DK
+PL18GAM019,LARGHA,0,Pup,F,Gambell,Bering Sea,2018,SEP,9,Summer,1,Gadus chalcogrammus,7.29,Software,DK
+PL14GAM141,LARGHA,0,Pup,F,Gambell,Bering Sea,2014,NOV,11,Summer,5,Gadus chalcogrammus,3.71,Software,DK
+PL19GAM048,LARGHA,13,NonPup,M,Gambell,Bering Sea,2019,OCT,10,Summer,3,Gadus chalcogrammus,19.84,Calipers,DK
+PL14GAM141,LARGHA,0,Pup,F,Gambell,Bering Sea,2014,NOV,11,Summer,3,Gadus chalcogrammus,3.58,Software,DK
+PL14GAM141,LARGHA,0,Pup,F,Gambell,Bering Sea,2014,NOV,11,Summer,2,Gadus chalcogrammus,3.69,Software,DK
+PL14GAM141,LARGHA,0,Pup,F,Gambell,Bering Sea,2014,NOV,11,Summer,1,Gadus chalcogrammus,3.82,Software,DK
+PL17GAM063,LARGHA,1,NonPup,M,Gambell,Bering Sea,2017,SEP,9,Summer,3,Gadus chalcogrammus,14.73,Software,DK
+PL17GAM063,LARGHA,1,NonPup,M,Gambell,Bering Sea,2017,SEP,9,Summer,2,Gadus chalcogrammus,15.26,Software,DK
+PL17GAM063,LARGHA,1,NonPup,M,Gambell,Bering Sea,2017,SEP,9,Summer,1,Gadus chalcogrammus,15.46,Software,DK
+PL18GAM019,LARGHA,0,Pup,F,Gambell,Bering Sea,2018,SEP,9,Summer,2,Gadus chalcogrammus,7.06,Software,DK
+PL14GAM141,LARGHA,0,Pup,F,Gambell,Bering Sea,2014,NOV,11,Summer,6,Gadus chalcogrammus,3.59,Software,DK
+PL18GAM068,LARGHA,0,Pup,F,Gambell,Bering Sea,2018,NOV,11,Summer,1,Gadus chalcogrammus,3.79,Software,DK
+PL16GAM075,LARGHA,0,Pup,M,Gambell,Bering Sea,2016,OCT,10,Summer,3,Gadus chalcogrammus,3.81,Software,DK
+PL16GAM075,LARGHA,0,Pup,M,Gambell,Bering Sea,2016,OCT,10,Summer,2,Gadus chalcogrammus,4.35,Software,DK
+PL15GAM105,LARGHA,2,NonPup,M,Gambell,Bering Sea,2015,SEP,9,Summer,2,Gadus chalcogrammus,6.78,Software,DK
+DIO-059-05,LARGHA,2,NonPup,M,Diomede Island,Bering Sea,2005,OCT,10,Summer,1,Gadus chalcogrammus,3.49,Software,AS
+PL18GAM033,LARGHA,15,NonPup,M,Gambell,Bering Sea,2018,AUG,8,Summer,2,Gadus chalcogrammus,12.76,Software,DK
+PL18GAM033,LARGHA,15,NonPup,M,Gambell,Bering Sea,2018,AUG,8,Summer,1,Gadus chalcogrammus,12.16,Software,DK
+PL18GAM068,LARGHA,0,Pup,F,Gambell,Bering Sea,2018,NOV,11,Summer,4,Gadus chalcogrammus,4.04,Software,DK
+PL19GAM048,LARGHA,13,NonPup,M,Gambell,Bering Sea,2019,OCT,10,Summer,1,Gadus chalcogrammus,17.08,Calipers,DK
+PL18GAM068,LARGHA,0,Pup,F,Gambell,Bering Sea,2018,NOV,11,Summer,2,Gadus chalcogrammus,3.9,Software,DK
+PL19GAM048,LARGHA,13,NonPup,M,Gambell,Bering Sea,2019,OCT,10,Summer,2,Gadus chalcogrammus,18.9,Calipers,DK
+PL18GAM016,LARGHA,0,Pup,M,Gambell,Bering Sea,2018,SEP,9,Summer,2,Gadus chalcogrammus,2.58,Software,DK
+PL18GAM016,LARGHA,0,Pup,M,Gambell,Bering Sea,2018,SEP,9,Summer,1,Gadus chalcogrammus,3.13,Software,DK
+PL17GAM085,LARGHA,3,NonPup,M,Gambell,Bering Sea,2017,OCT,10,Summer,1,Gadus chalcogrammus,15.93,Software,DK
+PL17GAM080,LARGHA,0,Pup,M,Gambell,Bering Sea,2017,SEP,9,Summer,3,Gadus chalcogrammus,4.48,Software,AS
+PL17GAM080,LARGHA,0,Pup,M,Gambell,Bering Sea,2017,SEP,9,Summer,2,Gadus chalcogrammus,6.81,Software,AS
+PL17GAM080,LARGHA,0,Pup,M,Gambell,Bering Sea,2017,SEP,9,Summer,1,Gadus chalcogrammus,14.17,Software,AS
+DIO-141-03,LARGHA,1,NonPup,M,Diomede Island,Bering Sea,2003,JUN,6,Summer,1,Gadus chalcogrammus,6.02,Software,AS
+PL15GAM105,LARGHA,2,NonPup,M,Gambell,Bering Sea,2015,SEP,9,Summer,1,Gadus chalcogrammus,2.82,Software,DK
+PL18GAM068,LARGHA,0,Pup,F,Gambell,Bering Sea,2018,NOV,11,Summer,3,Gadus chalcogrammus,4.42,Software,DK
+PL16GAM007,LARGHA,1,NonPup,M,Gambell,Bering Sea,2016,SEP,9,Summer,3,Gadus chalcogrammus,16.38,Software,DK
+PL17GAM072,LARGHA,0,Pup,F,Gambell,Bering Sea,2017,OCT,10,Summer,3,Gadus chalcogrammus,2.97,Software,DK
+PL17GAM072,LARGHA,0,Pup,F,Gambell,Bering Sea,2017,OCT,10,Summer,4,Gadus chalcogrammus,2.91,Software,DK
+PL16GAM087,LARGHA,0,Pup,U,Gambell,Bering Sea,2016,OCT,10,Summer,1,Gadus chalcogrammus,17.47,Calipers,DK
+PL16GAM087,LARGHA,0,Pup,U,Gambell,Bering Sea,2016,OCT,10,Summer,2,Gadus chalcogrammus,16.89,Calipers,DK
+PL16GAM087,LARGHA,0,Pup,U,Gambell,Bering Sea,2016,OCT,10,Summer,3,Gadus chalcogrammus,17.53,Calipers,DK
+PL16GAM087,LARGHA,0,Pup,U,Gambell,Bering Sea,2016,OCT,10,Summer,4,Gadus chalcogrammus,18.02,Calipers,DK
+PL16GAM080,LARGHA,0,Pup,M,Gambell,Bering Sea,2016,OCT,10,Summer,1,Gadus chalcogrammus,5.8,Software,DK
+PL17GAM072,LARGHA,0,Pup,F,Gambell,Bering Sea,2017,OCT,10,Summer,2,Gadus chalcogrammus,4.29,Software,DK
+PL16GAM007,LARGHA,1,NonPup,M,Gambell,Bering Sea,2016,SEP,9,Summer,2,Gadus chalcogrammus,15.99,Software,DK
+PL16GAM080,LARGHA,0,Pup,M,Gambell,Bering Sea,2016,OCT,10,Summer,2,Gadus chalcogrammus,4.24,Software,DK
+PL16GAM007,LARGHA,1,NonPup,M,Gambell,Bering Sea,2016,SEP,9,Summer,4,Gadus chalcogrammus,14.11,Software,DK
+PL14GAM126,LARGHA,0,Pup,U,Gambell,Bering Sea,2014,OCT,10,Summer,1,Gadus chalcogrammus,6.67,Software,DK
+PL14GAM126,LARGHA,0,Pup,U,Gambell,Bering Sea,2014,OCT,10,Summer,2,Gadus chalcogrammus,9.27,Software,DK
+PL14GAM126,LARGHA,0,Pup,U,Gambell,Bering Sea,2014,OCT,10,Summer,3,Gadus chalcogrammus,4.83,Software,DK
+PL19GAM051,LARGHA,0,Pup,F,Gambell,Bering Sea,2019,NOV,11,Summer,1,Gadus chalcogrammus,5.14,Software,DK
+PL19GAM051,LARGHA,0,Pup,F,Gambell,Bering Sea,2019,NOV,11,Summer,2,Gadus chalcogrammus,4.47,Software,DK
+DIO-171-03,LARGHA,0,Pup,M,Diomede Island,Bering Sea,2003,SEP,9,Summer,10,Gadus chalcogrammus,3.03,Software,DK
+PL16GAM075,LARGHA,0,Pup,M,Gambell,Bering Sea,2016,OCT,10,Summer,1,Gadus chalcogrammus,4.51,Software,DK
+PL16GAM080,LARGHA,0,Pup,M,Gambell,Bering Sea,2016,OCT,10,Summer,3,Gadus chalcogrammus,6.99,Software,DK
+DIO-171-03,LARGHA,0,Pup,M,Diomede Island,Bering Sea,2003,SEP,9,Summer,1,Gadus chalcogrammus,3.27,Software,DK
+PL16GAM007,LARGHA,1,NonPup,M,Gambell,Bering Sea,2016,SEP,9,Summer,1,Gadus chalcogrammus,12.45,Software,DK
+PL17GAM072,LARGHA,0,Pup,F,Gambell,Bering Sea,2017,SEP,9,Summer,1,Gadus chalcogrammus,3.91,Software,DK
+DIO-171-03,LARGHA,0,Pup,M,Diomede Island,Bering Sea,2003,SEP,9,Summer,6,Gadus chalcogrammus,3.62,Software,DK
+DIO-171-03,LARGHA,0,Pup,M,Diomede Island,Bering Sea,2003,SEP,9,Summer,5,Gadus chalcogrammus,2.72,Software,DK
+DIO-171-03,LARGHA,0,Pup,M,Diomede Island,Bering Sea,2003,SEP,9,Summer,4,Gadus chalcogrammus,3.38,Software,DK
+DIO-171-03,LARGHA,0,Pup,M,Diomede Island,Bering Sea,2003,SEP,9,Summer,2,Gadus chalcogrammus,3.05,Software,DK
+DIO-171-03,LARGHA,0,Pup,M,Diomede Island,Bering Sea,2003,SEP,9,Summer,7,Gadus chalcogrammus,2.77,Software,DK
+DIO-171-03,LARGHA,0,Pup,M,Diomede Island,Bering Sea,2003,SEP,9,Summer,8,Gadus chalcogrammus,3.95,Software,DK
+DIO-059-05,LARGHA,2,NonPup,M,Diomede Island,Bering Sea,2005,OCT,10,Summer,6,Gadus chalcogrammus,3.36,Software,AS
+PL18GAM058,LARGHA,6,NonPup,F,Gambell,Bering Sea,2018,NOV,11,Summer,1,Gadus chalcogrammus,16.62,Calipers,DK
+PL17GAM074,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,1,Gadus chalcogrammus,3.68,Software,DK
+DIO-171-03,LARGHA,0,Pup,M,Diomede Island,Bering Sea,2003,SEP,9,Summer,3,Gadus chalcogrammus,2.66,Software,DK
+PL18GAM058,LARGHA,6,NonPup,F,Gambell,Bering Sea,2018,NOV,11,Summer,2,Gadus chalcogrammus,19.1,Calipers,DK
+DIO-059-05,LARGHA,2,NonPup,M,Diomede Island,Bering Sea,2005,OCT,10,Summer,2,Gadus chalcogrammus,3.73,Software,AS
+DIO-059-05,LARGHA,2,NonPup,M,Diomede Island,Bering Sea,2005,OCT,10,Summer,3,Gadus chalcogrammus,3.28,Software,AS
+DIO-059-05,LARGHA,2,NonPup,M,Diomede Island,Bering Sea,2005,OCT,10,Summer,4,Gadus chalcogrammus,3.2,Software,AS
+DIO-059-05,LARGHA,2,NonPup,M,Diomede Island,Bering Sea,2005,OCT,10,Summer,5,Gadus chalcogrammus,3.49,Software,AS
+DIO-171-03,LARGHA,0,Pup,M,Diomede Island,Bering Sea,2003,SEP,9,Summer,9,Gadus chalcogrammus,3.38,Software,DK
+PL16GAM015,LARGHA,0,Pup,U,Gambell,Bering Sea,2016,SEP,9,Summer,3,Gadus macrocephalus,8.19,Software,DK
+PL17SH106,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2017,NOV,11,Summer,3,Gadus macrocephalus,3.95,Software,DK
+PL17SH106,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2017,NOV,11,Summer,4,Gadus macrocephalus,3.69,Software,DK
+PL17SH033,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,2,Gadus macrocephalus,4.12,Software,DK
+PL17SH033,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,3,Gadus macrocephalus,3.8,Software,DK
+PL17SH033,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,4,Gadus macrocephalus,3.38,Software,DK
+PL16GAM015,LARGHA,0,Pup,U,Gambell,Bering Sea,2016,SEP,9,Summer,1,Gadus macrocephalus,7.86,Software,DK
+PL16GAM015,LARGHA,0,Pup,U,Gambell,Bering Sea,2016,SEP,9,Summer,2,Gadus macrocephalus,6.6,Software,DK
+PL17SH033,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,1,Gadus macrocephalus,3.75,Software,DK
+PL19GAM002,LARGHA,3,NonPup,F,Gambell,Bering Sea,2019,FEB,2,Winter,1,Gadus macrocephalus,10.42,Software,DK
+PL17SH034,LARGHA,10,NonPup,U,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,1,Gadus macrocephalus,3.73,Software,DK
+PL17SH034,LARGHA,10,NonPup,U,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,2,Gadus macrocephalus,4.11,Software,DK
+PL17SH153,LARGHA,7,NonPup,F,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,1,Gadus macrocephalus,3.93,Software,DK
+PL17SH153,LARGHA,7,NonPup,F,Shishmaref,Chukchi Sea,2017,OCT,10,Summer,2,Gadus macrocephalus,4.14,Software,DK
+PL12GAM008,LARGHA,3,NonPup,M,Gambell,Bering Sea,2012,AUG,8,Summer,1,Gadus macrocephalus,7.02,Software,DK
+DIO-120-03,LARGHA,5,NonPup,M,Diomede Island,Bering Sea,2003,JUN,6,Summer,1,Gadus macrocephalus,5.71,Software,DK
+PL16SH057,LARGHA,9,NonPup,M,Shishmaref,Chukchi Sea,2016,SEP,9,Summer,1,Gadus macrocephalus,8,Software,DK
+PL17SH106,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2017,NOV,11,Summer,2,Gadus macrocephalus,4.02,Software,DK
+PL15GAM100,LARGHA,0,Pup,M,Gambell,Bering Sea,2015,SEP,9,Summer,4,Gadus macrocephalus,3.73,Software,DK
+PL16GAM011,LARGHA,0,Pup,F,Gambell,Bering Sea,2016,SEP,9,Summer,1,Gadus macrocephalus,5.5,Software,DK
+PL14GAM142,LARGHA,1,NonPup,F,Gambell,Bering Sea,2014,DEC,12,Winter,1,Gadus macrocephalus,5.26,Software,DK
+PL17GAM070,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,2,Gadus macrocephalus,3.45,Software,DK
+PL15GAM100,LARGHA,0,Pup,M,Gambell,Bering Sea,2015,SEP,9,Summer,6,Gadus macrocephalus,3.09,Software,DK
+PL17SH106,LARGHA,1,NonPup,M,Shishmaref,Chukchi Sea,2017,NOV,11,Summer,1,Gadus macrocephalus,4.32,Software,DK
+PL17GAM070,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,1,Gadus macrocephalus,3.64,Software,DK
+PL17GAM070,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,3,Gadus macrocephalus,3.49,Software,DK
+PL17GAM070,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,4,Gadus macrocephalus,3.6,Software,DK
+PL17GAM070,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,5,Gadus macrocephalus,3.4,Software,DK
+PL17GAM070,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,6,Gadus macrocephalus,3.62,Software,DK
+PL17GAM070,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,7,Gadus macrocephalus,3.55,Software,DK
+PL17GAM070,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,8,Gadus macrocephalus,4.04,Software,DK
+PL15GAM100,LARGHA,0,Pup,M,Gambell,Bering Sea,2015,SEP,9,Summer,3,Gadus macrocephalus,4.15,Software,DK
+PL17GAM070,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,10,Gadus macrocephalus,3.66,Software,DK
+PL18GAM052,LARGHA,8,NonPup,M,Gambell,Bering Sea,2018,OCT,10,Summer,1,Gadus macrocephalus,13.81,Software,DK
+PL18GAM052,LARGHA,8,NonPup,M,Gambell,Bering Sea,2018,OCT,10,Summer,2,Gadus macrocephalus,13.56,Software,DK
+PL18GAM052,LARGHA,8,NonPup,M,Gambell,Bering Sea,2018,OCT,10,Summer,3,Gadus macrocephalus,12.4,Software,DK
+PL15GAM100,LARGHA,0,Pup,M,Gambell,Bering Sea,2015,SEP,9,Summer,1,Gadus macrocephalus,3.14,Software,DK
+PL15GAM100,LARGHA,0,Pup,M,Gambell,Bering Sea,2015,SEP,9,Summer,2,Gadus macrocephalus,3.39,Software,DK
+PL15GAM100,LARGHA,0,Pup,M,Gambell,Bering Sea,2015,SEP,9,Summer,5,Gadus macrocephalus,3.33,Software,DK
+PL17GAM074,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,1,Gadus macrocephalus,8.09,Software,DK
+PL17GAM070,LARGHA,0,Pup,U,Gambell,Bering Sea,2017,OCT,10,Summer,9,Gadus macrocephalus,3.8,Software,DK

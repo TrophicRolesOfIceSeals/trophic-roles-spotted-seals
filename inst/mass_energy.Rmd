@@ -1,0 +1,119 @@
+---
+title: "Trophic roles of spotted seals: Fish mass to caloric content conversions"
+author: "Paul Conn"
+date: '2023-02-21'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Rationale
+
+One of the quantities needed for our analysis is $c_k$, the caloric content of one gram (wet weight) of fish mass for species $k$.  This is tricky, because caloric content can vary as a function of fish mass.  Ideally, what we would do is to estimate species-specific probability density functions for fish masses within seal stomachs (say $f_k(m)$), and use a fish mass to caloric content conversion to estimate an overall mean $c_k$ value.  The complete calculation will require otolith lengths from fish stomachs, otolith length to fish mass conversions, and fish mass to caloric content conversions.  
+
+This sub-analysis concentrates on the last piece: fish mass to caloric content conversions.  We'll again use data kindly provided by J. Vollenweiler.
+
+```{r read}
+#read in data
+Data <- read.csv(file="./data/Lt-Wt-EnergyWet.csv",header=T)
+```
+
+## Energy content as a function of fish mass
+
+Previously (in "length_energy.Rmd"), we found that the natural log of total energy content was linearly related
+to the natural log of fish length.  Let's see if that holds true for fish mass as well:
+
+```{r plot}
+
+Species = unique(Data$Species)
+
+#isolate records with energy data and non-missing species observations
+Energy_data = Data[which(is.na(Data$TotalEnergy_kCal)==0),]
+
+# take a look at log(energy density vs log (length)
+#library(ggplot2)
+#ggplot(Energy_data)+geom_point(aes(x=loglth,y=EnergyDensity))+face#t_wrap(vars(Species))
+
+# take a look at log(total energy) vs log(mass)
+library(ggplot2)
+ggplot(Energy_data)+geom_point(aes(x=log(WholeBodyWetMass_g),y=log(TotalEnergy_kCal)))+facet_wrap(vars(Species))
+
+```
+
+
+There are some outliers, but this looks pretty good.  Let's fit some linear models to these; we'll also output functions to convert fish mass in grams to kCal, paying attention to bias corrections when converting back to the real scale.  We'll also add identifiers to make sure we know what type of length was used (FL or TL).
+
+```{r LMs}
+LM_results = vector("list",9)
+Bias = rep(NA,9)
+Coefs = matrix(0,9,2) 
+for(isp in 1:9){
+  Cur_data = Energy_data[which(Energy_data$Species==Species[isp]),]
+  #remove mass = 0 values if present
+  if(sum(Cur_data$WholeBodyWetMass_g==0)>0){
+    Cur_data = Cur_data[-which(Cur_data$WholeBodyWetMass_g==0),]
+  }
+  LM_results[[isp]]=lm(log(TotalEnergy_kCal)~log(WholeBodyWetMass_g),data=Cur_data)
+  Coefs[isp,]=as.numeric(coefficients(LM_results[[isp]]))
+  Bias[isp] = mean(exp(rnorm(1000000,0,sqrt(var(LM_results[[isp]]$residuals)))))
+}
+Bias
+Coefs
+
+Cap_WetMass_to_kCal = function(FM){
+  log_FM = log(FM)
+  1.027*exp(0.0169 + 1.132*log_FM)
+}
+
+SL_WetMass_to_kCal = function(FM){
+  log_FM = log(FM)
+  1.012*exp(0.181 + 1.042*log_FM)
+}
+
+WP_WetMass_to_kCal = function(FM){
+  log_FM = log(FM)
+  1.011*exp(0.072 + 1.016*log_FM)
+}
+
+PH_WetMass_to_kCal = function(FM){
+  log_FM = log(FM)
+  1.031*exp(0.027 + 1.088*log_FM)
+}
+
+SC_WetMass_to_kCal = function(FM){
+  log_FM = log(FM)
+  1.008*exp(-.136 + 1.044*log_FM)
+}
+
+AC_WetMass_to_kCal = function(FM){
+  log_FM = log(FM)
+  1.015*exp(.089 + 1.017*log_FM)
+}
+
+PC_WetMass_to_kCal = function(FM){
+  log_FM = log(FM)
+  1.004*exp(0.015 + 0.983*log_FM)
+}
+
+YS_WetMass_to_kCal = function(FM){
+  log_FM = log(FM)
+  1.007*exp(0.950 + 0.948*log_FM)
+}
+
+RS_WetMass_to_kCal = function(FM){
+  log_FM = log(FM)
+  1.012*exp(0.152 + 1.006*log_FM)
+}
+
+```
+
+## Relationship export
+
+Let's save these function and export them to an R data file for our
+subsequent fish consumption analysis.
+
+```{r export}
+save(Cap_WetMass_to_kCal,SL_WetMass_to_kCal,WP_WetMass_to_kCal,PH_WetMass_to_kCal,SC_WetMass_to_kCal,AC_WetMass_to_kCal,PC_WetMass_to_kCal,YS_WetMass_to_kCal,RS_WetMass_to_kCal,file="./data/energy_mass_regressions.RData")
+```

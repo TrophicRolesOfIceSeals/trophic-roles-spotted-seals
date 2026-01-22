@@ -1,0 +1,762 @@
+---
+title: "Supplement 3: Analysis of otolith data from spotted seal stomachs in the Bering and Chukchi Seas"
+author: "Paul Conn"
+bibliography: references.bib
+date: '2023-04-26'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Summary
+
+The purpose of this supplement is to describe analysis of otolith frequency and size composition for our 9 target prey species from accumulated ADF&G measurements from harvested spotted seal stomachs, as well as a few additional samples from scats obtained during NOAA-AFSC seal captures in the Bering Sea.  This analysis feeds into the overall analysis described in the manuscript  "Trophic Roles of Spotted Seals in the Bering and Chukchi Seas" by Boveng et al. 
+
+In particular, I fit models to otolith data that predict otolith frequency and length as a function of potential predictors.  Candidate predictors include spatial strata (Bering vs. Chukchi), age (pup vs non-pup), and season (winter vs. summer).  The ultimate output
+from this analysis is a set of estimates and standard errors of several quantities described in the main manuscript, including
+
+- $\lambda_{rsatk}$: the expected minimum number of fish of species $k$ represented by otoliths found in seals of sex $s$, age class $a$, in region $s$ in season $t$;  
+
+- $\nu_{rsatk}$: the predicted length of otoliths of species $k$ in stomachs of seals with covariates $r$, $s$, $a$, and $t$;
+
+Rather than providing a single, constant values for these parameters, we employ a Bayesian estimation scheme and produce posterior samples for these values.  These can be used in later modeling steps to
+propagate uncertainty into the ultimate quantities of interest (e.g., total prey biomass consumed).
+
+
+## Data sources
+
+The first step is to load our various data sources.  Let's start with the ADF&G data, and do some cleaning up (including combining non-target species into an "Other" category).  There are also about 160 otolith lengths that are missing a seal age; rather than throw these away (data are limited!), let's assign them to be non-pups, which
+is the most likely scenario.  In many cases, we'll end up omitting age class as a predictor anyway.
+
+```{r, load1}
+  Ot_len_df1 <- read.csv(file="./data/ADFG_SpottedSeals_OtolithsMeasured20220627.csv",header=T)
+  Ot_len_df1$SealAgeClass[which(Ot_len_df1$SPEC_NUM %in% c("PL12GAM049","PL12SH052","PL14GAM124"))]="Pup"  #confirmed pups via claw age (Justin Crawford, 5/9 email)
+  Ot_len_df1$SealAgeClass[which(Ot_len_df1$SealAgeClass=='')]='NonPup'
+  Ot_len_df2 <- read.csv(file="./data/ADFG_SpottedSeals_OtolithsMeasured20230424_PriorityMeasurements.csv",header=T)
+  colnames(Ot_len_df2)=colnames(Ot_len_df1)  #slight variation in capitalization in column names
+  Ot_len_df = rbind(Ot_len_df1,Ot_len_df2)
+  Stomachs_df <- read.csv(file="./data/ADFG_SpottedSeals_StomachContentsData20220705.csv",header=T)
+  
+  #we need a way to link scientific names to common names in various Excel files
+  Species = c("Walleye pollock","Pacific cod","Pacific sand lance","Pacific herring",   
+"Pacific capelin","Rainbow smelt","Saffron cod","Arctic cod","Yellowfin sole")  
+  Species_to_common = matrix(0,9,2)
+  Species_to_common[,2]=Species
+  Species_to_common[,1]=c("Gadus chalcogrammus","Gadus macrocephalus","Ammodytes hexapterus", "Clupea pallasii","Mallotus villosus","Osmerus mordax","Eleginus gracilis","Boreogadus saida", "Limanda aspera")
+  
+  #convert latin to common species for otoliths file
+  for(isp in 1:9){
+    Which_isp = which(Ot_len_df$FishSpecies==Species_to_common[isp,1])
+    Ot_len_df$FishSpecies[Which_isp]=Species_to_common[isp,2]
+  }
+  
+  #standardize species names in stomachs file
+  Colnames=colnames(Stomachs_df)
+  Colnames[13]="Pacific herring"
+  Colnames[14]="Rainbow smelt"
+  Colnames[15]="Pacific capelin"
+  Colnames[16]="Pacific sand lance"
+  #note column 17 is a general 'gadidae' category but there aren't too many of them (166)
+  #column 80 is "Limanda.sp" - may need to figure out what to do with these
+  Colnames[18]="Arctic cod"
+  Colnames[19]="Saffron cod"
+  Colnames[20]="Walleye pollock"
+  Colnames[21]="Pacific cod"
+  Colnames[81]="Yellowfin sole"
+  colnames(Stomachs_df)=Colnames
+  All_sp = c(12:93)
+  Keep_sp = c(13,14,15,16,18,19,20,21,81)
+  Other_sp = All_sp[-which(All_sp %in% Keep_sp)]
+  Other = rowSums(Stomachs_df[,Other_sp])
+  Keep_df = Stomachs_df[,Keep_sp]
+  Stomachs_df = Stomachs_df[,1:11]
+  Stomachs_df = cbind(Stomachs_df,Keep_df)
+  Stomachs_df$Other = Other
+  
+```
+
+Now, let's load in AFSC scat data and attempt to combine that with our stomachs and otolith length
+data frames.  There are a few "unknown" age classes in there (when 
+field teams found scat but didn't see the animal).  These are more likely
+to be non-pups than pups, so rather than throw those out, we'll just set those to be adults.  Note that not all of the ADFG fields are going to be filled in, but we'll make sure to fill in all fields required for our analysis.
+
+```{r, load2}
+  AFSC_data <- read.csv("./data/PEP_Pl_otolength_allspecies.csv")
+  AFSC_data$prey_species[which(AFSC_data$prey_species=="Clupea pallasi")]="Clupea pallasii"  #fix typo / alternate spelling
+  AFSC_data$Season = "Winter"
+  AFSC_data$Season[which(AFSC_data$Month>4)]="Summer"
+  #change species to common name, and those not in our target list to "other"
+  AFSC_data$prey_species[which(!(AFSC_data$prey_species %in% Species_to_common[,1]))]="Other"
+  for(isp in 1:9){
+    Which_isp = which(AFSC_data$prey_species==Species_to_common[isp,1])
+    if(length(Which_isp)>0)AFSC_data$prey_species[Which_isp]=Species_to_common[isp,2]
+  }
+  AFSC_data$SealAgeClass[which(AFSC_data$SealAgeClass=="Unknown")]="NonPup"
+
+  #calculate %FO by species
+  Species = unique(AFSC_data$prey_species)
+  n_un = length(Species)
+  I_species = rep(0,n_un)
+  FO = rep(0,n_un)
+  n_seal = length(Unique_spenos)
+  for(iseal in 1:n_seal){
+    for(ifish in 1:n_un){
+      Cur_dat = AFSC_data[which(AFSC_data$speno==Unique_spenos[iseal]),]
+      if(Species[ifish] %in% Cur_dat$prey_species)FO[ifish]=FO[ifish]+1
+    }
+  }
+  FO = FO/n_seal*100
+  
+  FO_df = data.frame("Species"=Species,"FOperc"=FO)
+  print(FO_df)
+  
+  #create otolith length data set in same format as ADFG & merge
+  Otolith_AFSC = AFSC_data[which(AFSC_data$prey_species %in% Species_to_common[,2]),]
+  Dummy_df = as.data.frame(lapply(Ot_len_df[1,], rep,nrow(Otolith_AFSC)))
+  Dummy_df$Location = "AFSC"
+  Dummy_df$Measured.by = "AFSC"
+  Dummy_df$SealSEX="NA"
+  Dummy_df$MonthNumb = Otolith_AFSC$Month
+  Dummy_df$SPEC_NUM = Otolith_AFSC$speno
+  Dummy_df$SealAgeClass=Otolith_AFSC$SealAgeClass
+  Dummy_df$OtolithLength=Otolith_AFSC$oto_length_mm
+  Dummy_df$Season = Otolith_AFSC$Season
+  Dummy_df$FishSpecies = Otolith_AFSC$prey_species
+  Ot_len_df = rbind(Ot_len_df,Dummy_df)
+
+# now to coerce into format for stomach data where
+# there is one record per seal
+  Unique_spenos = unique(AFSC_data$speno)
+  n_unique = length(Unique_spenos)
+  Dummy_df = as.data.frame(lapply(Stomachs_df[1,], rep,n_unique))
+  Dummy_df$Location = "AFSC"
+  Sp_names = colnames(Stomachs_df)[12:21]
+  for(iseal in 1:n_unique){
+    Cur_data = AFSC_data[which(AFSC_data$speno==Unique_spenos[iseal]),]
+    Cur_data$prey_species=factor(Cur_data$prey_species,levels=Sp_names)
+    Dummy_df[iseal,"SPEC_NUM"]=Cur_data$speno[1]
+    Dummy_df[iseal,"SealAgeClass"]=Cur_data$SealAgeClass[1]
+    Dummy_df[iseal,"Region"]="Bering"
+    Dummy_df[iseal,"MonthNumb"]=Cur_data$Month[1]
+    Dummy_df[iseal,"Season"]=Cur_data$Season[1]
+    Dummy_df[iseal,"SealAgeClass"]=Cur_data$SealAgeClass[1]
+    Dummy_df[iseal,12:21]=summary(Cur_data$prey_species)
+  }
+  colnames(Dummy_df)=colnames(Stomachs_df)
+  Stomachs_df = rbind(Stomachs_df,Dummy_df)
+```
+
+Let's look at the number of otoliths by species:
+
+```{r, species_sum}
+  colSums(Stomachs_df[,12:21])
+```
+
+By comparison, the number of otoliths measured for the 9 species ("Other" is not measured here) are 
+
+```{r, ot_species_sum}
+  tabulate(factor(Ot_len_df$FishSpecies,levels=colnames(Stomachs_df[,12:21])))
+```
+Rather than look at the total number of otoliths measured, it might also be instructive to 
+see how many stomachs those represent.  The notion is that otoliths measured from the same stomach represent subsamples that might result in artificially low variance (if a seal is feeding in schools of same-sized fish for example).  Ideally we would measure otoliths across stomachs, rather than continue to measure otoliths from the same stomach.  Let's 
+take a closer look at how many stomachs our measured otoliths are from (by species.
+
+
+```{r, stomach_species_sum}
+  Ot_len_df$IDsp = paste(Ot_len_df$SPEC_NUM,Ot_len_df$FishSpecies)
+  Unique_IDsp = unique(Ot_len_df$IDsp)
+  First = rep(0,nrow(Ot_len_df))
+  for(i in 1:length(Unique_IDsp)){
+    Cur_which = which(Ot_len_df$IDsp==Unique_IDsp[i])
+    First[Cur_which[1]]=1
+  }
+  Ind_ot_df = Ot_len_df[which(First==1),]
+  tabulate(factor(Ind_ot_df$FishSpecies,levels=colnames(Stomachs_df[,12:21])))
+```
+This seems sufficient to estimate random effects for individuals, although we'll need to be careful in to avoid confounding among covariate predictors (e.g., age class, season, strata) in some of these situations.  This is probably best handled on a case by case basis.  Let's go through each species, fitting 2 models to each: one for the number of fish represented by otoliths of each species, and a second for the length of otoliths that were measured.  The general strategy will be to conduct model selection with GLMM models in a likelihood framework, and the to "flip the switch" to a Bayesian framework to provide posterior predictions for the number of otoliths and length of otoliths (in mm) for each target prey species.  Before we do that, let's set up some structures for holding posterior distributions:
+
+```{r posterior_setup}
+Pred_length = array(0,dim=c(10000,9,2,2,2))  
+Pred_otoliths = array(0,dim=c(10000,10,2,2,2))  
+#dimensions are posterior replicate, prey species, age class, strata, season 
+# note we're using a 10th dimension for species to model counts of non-target ('other') species, but
+# we won't have otolith lengths for these
+```
+
+### Pacific herring
+
+There are decent sample sizes for herring otoliths, but no samples in winter.  
+
+```{r, herring_stomachs}
+  Herring_stomachs = Stomachs_df[which(Stomachs_df[,"Pacific herring"]>0),]
+  unique(Herring_stomachs$Season)
+```
+So, we'll by default omit season as a predictor of otolith length.  Let's explore
+the effects of region and seal age class, however.  We'll conduct analysis using the glmmTMB package [@BrooksEtAl2017] in R [@RTeam2022].
+
+```{r, glmm_herring1,message=FALSE, warning=FALSE}
+  library(glmmTMB)
+  herring_df = Ot_len_df[which(Ot_len_df$FishSpecies=="Pacific herring"),]
+  herring_glmm = glmmTMB(log(OtolithLength) ~ SealAgeClass+Region+(1|SPEC_NUM),data=herring_df,REML=FALSE)
+  summary(herring_glmm)
+```
+It doesn't look like there is evidence for either age class or a regional effect on herring otolith
+lengths.  Let's run a simpler model omitting these and "flip the switch" by using the tmbstan package [@MonnahanKristensen2018] to sample posterior predictions for each parameter.  I'll turn 
+off output for this one to keep this document tidy.  I'm also going to cache results
+but if this is the first time you've run this code it'll take 20 seconds or so.
+
+
+```{r, herring_stan1,results=FALSE,message=FALSE, warning=FALSE}
+  herring_glmm = glmmTMB(log(OtolithLength) ~  (1|SPEC_NUM),data=herring_df,REML=FALSE)
+  library(tmbstan)
+  set.seed(11111)
+  stan_fit = tmbstan(herring_glmm$obj,chains=2,iter=10000)
+```
+
+Ignoring random effects for individual seals, we'll extract the intercept and make (log-scale)
+predictions of otolith length.  We'll wait until we've processed log-scale predictions for all
+species before exponentiating to get real scale predictions (this keeps the code a little tidier).
+
+```{r, herring_post1}
+  samples = extract(stan_fit,pars=c("beta"))
+  
+  Pred_length[,1,,,] = unlist(samples)
+  # recall dimensions are posterior replicate, prey species, age class, strata, season   # we're basically duplicating these predictions over age class; winter values (season = 2) were initialized to zero and remain zero
+```
+
+As a sanity check, let's plot observed otolith lengths with predictions:
+
+```{r, herring_sanity}
+ hist(herring_df$OtolithLength)
+ abline(v=mean(exp(unlist(samples))))
+```
+Our predictions (vertical black line) looks to be in the "meat" of the distribution of observed otoliths.
+
+Let's now fit a model to observed otolith counts (both measured and unmeasured).Since these are count data, we'll use a Poisson distribution.  However, we'll omit random effects for individuals since we'd like data means to "speak for themselves."  Allowing random effects has the tendency of reducing the influence of extreme observations, as when seals eat a lot of one fish type; but in this case, we don't necessarily want to explain those away as outliers.  We'll just fit to data from the "Summer" season since "Winter" has all zero counts for herring, and optimizers have a hard time to that (we'll just set the expected herring count in winter to zero).
+
+```{r, herring_count}
+  library(glmmTMB)
+  herring_df = Stomachs_df
+  herring_df$count = Stomachs_df[,which(colnames(Stomachs_df)=="Pacific herring")]
+  herring_df = herring_df[which(herring_df$Season=="Summer"),]
+  #herring_glmm = glmmTMB(count ~ SealAgeClass+Region+(1|SPEC_NUM),data=herring_df,family="poisson")
+  herring_glmm = glmmTMB(count ~ SealAgeClass+Region,data=herring_df,family="poisson")
+
+  summary(herring_glmm)
+```
+
+So, looks like there's evidence for effects of both age class and region now.
+Let's fit this model using tmbstan and collect predictions.
+
+```{r, herring_stan2,results=FALSE,cache=TRUE}
+  set.seed(11111)
+  options(mc.cores = parallel::detectCores())  #speed things up hopefully
+  stan_fit = tmbstan(herring_glmm$obj,chains=2,iter=10000)
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]","beta[3]"))
+
+  Beta = matrix(unlist(samples),10000,3)
+  Pred_otoliths[,1,1,1,1] = exp(Beta[,1])  # Bering adult
+  Pred_otoliths[,1,2,1,1] = exp(Beta[,1]+Beta[,2])  # Bering pup
+  Pred_otoliths[,1,1,2,1] = exp(Beta[,1]+Beta[,3])  # Chukchi adult
+  Pred_otoliths[,1,2,2,1] = exp(Beta[,1]+Beta[,2]+Beta[,3])  # Chukchi pup
+  # recall dimensions are posterior replicate, prey species, age class, strata, season
+```
+
+In this case, the three beta parameters are the intercept, the pup effect, and the chukchi effect, respectively - we've used that knowledge to fill in our posterior prediction array.  Note that since we haven't provided values for winter, they are set to the initialized value (zero), as desired.
+
+
+### Rainbow smelt
+
+Let's repeat the same 2 GLMMs for rainbow smelt, allowing for more or less parameters 
+depending on what the data say.  In this case, otoliths from each age class, season, and strata
+are available.  However, models with both region and season failed to converge, likely because 
+summer obsevations tend to come from the Chukchi and winter observations tend to come from the Bering.
+We'll just use a model with region in it; since few seals are in the Chukchi in the winter anyway, this shouldn't really affect our total consumprion estimates.
+
+```{r, glmm_smelt1}
+  library(glmmTMB)
+  analysis_df = Ot_len_df[which(Ot_len_df$FishSpecies=="Rainbow smelt"),]
+  cur_glmm = glmmTMB(log(OtolithLength) ~ SealAgeClass+Region+(1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  summary(cur_glmm)
+```
+It looks like there is evidence for a region effect on otolith size, and weak evidence for
+an age class effect.  Let's just use region in the model for posterior predictions since there
+are relatively few observations of pups.
+
+```{r, smelt_stan1,results=FALSE}
+  analysis_glmm = glmmTMB(log(OtolithLength) ~   Region+(1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  library(tmbstan)
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]"))
+  Beta = matrix(unlist(samples),10000,2)
+
+  Pred_length[,2,,1,] = Beta[,1]
+  Pred_length[,2,,2,] = Beta[,1]+Beta[,2]
+  # recall dimensions are posterior replicate, prey species, age class, strata, season   
+```
+
+And now for the count GLMM:
+
+```{r, analysis_count}
+  library(glmmTMB)
+  analysis_df = Stomachs_df
+  analysis_df$count = Stomachs_df[,which(colnames(Stomachs_df)=="Rainbow smelt")]
+  #analysis_glmm = glmmTMB(count ~ SealAgeClass+Region+(1|SPEC_NUM),data=analysis_df,family="poisson")
+  analysis_glmm = glmmTMB(count ~ SealAgeClass+Region+Season,data=analysis_df,family="poisson")
+
+  summary(analysis_glmm)
+```
+
+So, looks like there's evidence for all effects.
+Let's fit this model using tmbstan and collect predictions.
+
+```{r, analysis_stan2,results=FALSE,cache=TRUE}
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]","beta[3]","beta[4]"))
+
+  Beta = matrix(unlist(samples),10000,4)
+  Pred_otoliths[,2,1,1,1] = exp(Beta[,1])  # Bering adult - summer
+  Pred_otoliths[,2,2,1,1] = exp(Beta[,1]+Beta[,2])  # Bering pup - summer
+  Pred_otoliths[,2,1,2,1] = exp(Beta[,1]+Beta[,3])  # Chukchi adult - summer
+  Pred_otoliths[,2,2,2,1] = exp(Beta[,1]+Beta[,2]+Beta[,3])  # Chukchi pup - summer
+  Pred_otoliths[,2,1,1,2] = exp(Beta[,1]+Beta[,4])  # Bering adult - winter
+  Pred_otoliths[,2,2,1,2] = exp(Beta[,1]+Beta[,2]+Beta[,4])  # Bering pup - winter
+  Pred_otoliths[,2,1,2,2] = exp(Beta[,1]+Beta[,3]+Beta[,4])  # Chukchi adult - winter
+  Pred_otoliths[,2,2,2,2] = exp(Beta[,1]+Beta[,2]+Beta[,3]+Beta[,4])  # Chukchi pup - winter
+
+  # recall dimensions are posterior replicate, prey species, age class, strata, season
+```
+### Pacific capelin
+
+In this case, otoliths from each age class, season, and strata
+are available.  However, models with both region and season failed to converge, likely because 
+summer obsevations tend to come from the Chukchi and winter observations tend to come from the Bering.
+We'll just use a model with region in it; since few seals are in the Chukchi in the winter anyway, this shouldn't really affect our total consumption estimates.
+
+```{r, glmm_capelin1}
+  library(glmmTMB)
+  analysis_df = Ot_len_df[which(Ot_len_df$FishSpecies=="Pacific capelin"),]
+  cur_glmm = glmmTMB(log(OtolithLength) ~ SealAgeClass+Region+Season+(1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  summary(cur_glmm)
+```
+
+It doesn't look like there's much evidence for variation in otolith size by any
+relevant predictor for capelin, so we'll use an intercept-only model for posterior
+prediction.
+
+```{r, capelin_stan1,results=FALSE}
+  analysis_glmm = glmmTMB(log(OtolithLength) ~ (1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  library(tmbstan)
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  
+  samples = extract(stan_fit,pars=c("beta"))
+  Beta = unlist(samples)
+
+  Pred_length[,3,,,] = Beta
+   # recall dimensions are posterior replicate, prey species, age class, strata, season   
+```
+
+And now for the count GLMM:
+
+```{r, analysis_count3}
+  library(glmmTMB)
+  analysis_df = Stomachs_df
+  analysis_df$count = Stomachs_df[,which(colnames(Stomachs_df)=="Pacific capelin")]
+  analysis_glmm = glmmTMB(count ~ SealAgeClass+Region+Season,data=analysis_df,family="poisson")
+  summary(analysis_glmm)
+```
+Looks like all predictor variables are relevant, so we will include them in posterior predictions.
+
+```{r, capelin_stan2,results=FALSE,cache=TRUE}
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]","beta[3]","beta[4]"))
+
+  Beta = matrix(unlist(samples),10000,4)
+  Pred_otoliths[,3,1,1,1] = exp(Beta[,1])  # Bering adult - summer
+  Pred_otoliths[,3,2,1,1] = exp(Beta[,1]+Beta[,2])  # Bering pup - summer
+  Pred_otoliths[,3,1,2,1] = exp(Beta[,1]+Beta[,3])  # Chukchi adult - summer
+  Pred_otoliths[,3,2,2,1] = exp(Beta[,1]+Beta[,2]+Beta[,3])  # Chukchi pup - summer
+  Pred_otoliths[,3,1,1,2] = exp(Beta[,1]+Beta[,4])  # Bering adult - winter
+  Pred_otoliths[,3,2,1,2] = exp(Beta[,1]+Beta[,2]+Beta[,4])  # Bering pup - winter
+  Pred_otoliths[,3,1,2,2] = exp(Beta[,1]+Beta[,3]+Beta[,4])  # Chukchi adult - winter
+  Pred_otoliths[,3,2,2,2] = exp(Beta[,1]+Beta[,2]+Beta[,3]+Beta[,4])  # Chukchi pup - winter
+
+  # recall dimensions are posterior replicate, prey species, age class, strata, season
+```
+
+### Sand lance
+
+```{r, glmm_sl1}
+  library(glmmTMB)
+  analysis_df = Ot_len_df[which(Ot_len_df$FishSpecies=="Pacific sand lance"),]
+  cur_glmm = glmmTMB(log(OtolithLength) ~ SealAgeClass+Region+Season+(1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  summary(cur_glmm)
+```
+We will base posterior predictions for otolith length on a model including the one
+'significant' predictor: Region.
+
+```{r, sl_stan1,results=FALSE}
+  analysis_glmm = glmmTMB(log(OtolithLength) ~ Region+(1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  library(tmbstan)
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]"))
+  Beta = matrix(unlist(samples),10000,2)
+
+  Pred_length[,4,,1,] = Beta[,1]
+  Pred_length[,4,,2,] = Beta[,1]+Beta[,2]
+
+   # recall dimensions are posterior replicate, prey species, age class, strata, season   
+```
+
+And now for the count GLMM:
+
+```{r, analysis_count4}
+  library(glmmTMB)
+  analysis_df = Stomachs_df
+  analysis_df$count = Stomachs_df[,which(colnames(Stomachs_df)=="Pacific sand lance")]
+  analysis_glmm = glmmTMB(count ~ SealAgeClass+Region+Season,data=analysis_df,family="poisson")
+  summary(analysis_glmm)
+```
+We'll use all 3 covariates when making predictions:
+
+```{r, sl_stan2,results=FALSE,cache=TRUE}
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]","beta[3]","beta[4]"))
+
+  Beta = matrix(unlist(samples),10000,4)
+  Pred_otoliths[,4,1,1,1] = exp(Beta[,1])  # Bering adult - summer
+  Pred_otoliths[,4,2,1,1] = exp(Beta[,1]+Beta[,2])  # Bering pup - summer
+  Pred_otoliths[,4,1,2,1] = exp(Beta[,1]+Beta[,3])  # Chukchi adult - summer
+  Pred_otoliths[,4,2,2,1] = exp(Beta[,1]+Beta[,2]+Beta[,3])  # Chukchi pup - summer
+  Pred_otoliths[,4,1,1,2] = exp(Beta[,1]+Beta[,4])  # Bering adult - winter
+  Pred_otoliths[,4,2,1,2] = exp(Beta[,1]+Beta[,2]+Beta[,4])  # Bering pup - winter
+  Pred_otoliths[,4,1,2,2] = exp(Beta[,1]+Beta[,3]+Beta[,4])  # Chukchi adult - winter
+  Pred_otoliths[,4,2,2,2] = exp(Beta[,1]+Beta[,2]+Beta[,3]+Beta[,4])  # Chukchi pup - winter
+
+  # recall dimensions are posterior replicate, prey species, age class, strata, season
+```
+
+### Arctic cod
+
+```{r, glmm_ac1}
+  library(glmmTMB)
+  analysis_df = Ot_len_df[which(Ot_len_df$FishSpecies=="Arctic cod"),]
+  cur_glmm = glmmTMB(log(OtolithLength) ~ SealAgeClass+Region+Season+(1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  summary(cur_glmm)
+```
+Include region in predictions:
+
+```{r, ac_stan1,results=FALSE}
+  analysis_glmm = glmmTMB(log(OtolithLength) ~ Region+(1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  library(tmbstan)
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]"))
+  Beta = matrix(unlist(samples),10000,2)
+
+  Pred_length[,5,,1,] = Beta[,1]
+  Pred_length[,5,,2,] = Beta[,1]+Beta[,2]
+
+   # recall dimensions are posterior replicate, prey species, age class, strata, season   
+```
+
+And now for the count GLMM:
+
+```{r, analysis_count5}
+  library(glmmTMB)
+  analysis_df = Stomachs_df
+  analysis_df$count = Stomachs_df[,which(colnames(Stomachs_df)=="Arctic cod")]
+  analysis_glmm = glmmTMB(count ~ SealAgeClass+Region+Season,data=analysis_df,family="poisson")
+  summary(analysis_glmm)
+```
+
+
+
+```{r, ac_stan2,results=FALSE,cache=TRUE}
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]","beta[3]","beta[4]"))
+
+  Beta = matrix(unlist(samples),10000,4)
+  Pred_otoliths[,5,1,1,1] = exp(Beta[,1])  # Bering adult - summer
+  Pred_otoliths[,5,2,1,1] = exp(Beta[,1]+Beta[,2])  # Bering pup - summer
+  Pred_otoliths[,5,1,2,1] = exp(Beta[,1]+Beta[,3])  # Chukchi adult - summer
+  Pred_otoliths[,5,2,2,1] = exp(Beta[,1]+Beta[,2]+Beta[,3])  # Chukchi pup - summer
+  Pred_otoliths[,5,1,1,2] = exp(Beta[,1]+Beta[,4])  # Bering adult - winter
+  Pred_otoliths[,5,2,1,2] = exp(Beta[,1]+Beta[,2]+Beta[,4])  # Bering pup - winter
+  Pred_otoliths[,5,1,2,2] = exp(Beta[,1]+Beta[,3]+Beta[,4])  # Chukchi adult - winter
+  Pred_otoliths[,5,2,2,2] = exp(Beta[,1]+Beta[,2]+Beta[,3]+Beta[,4])  # Chukchi pup - winter
+
+  # recall dimensions are posterior replicate, prey species, age class, strata, season
+```
+### Saffron cod
+
+```{r, glmm_sc1}
+  library(glmmTMB)
+  analysis_df = Ot_len_df[which(Ot_len_df$FishSpecies=="Saffron cod"),]
+  cur_glmm = glmmTMB(log(OtolithLength) ~ SealAgeClass+Region+Season+(1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  summary(cur_glmm)
+```
+
+Include age class and season in predictions:
+
+```{r, sc_stan1,results=FALSE}
+  analysis_glmm = glmmTMB(log(OtolithLength) ~ SealAgeClass + Season + (1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  library(tmbstan)
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]","beta[3]"))
+  Beta = matrix(unlist(samples),10000,3)
+
+  Pred_length[,6,1,,1] = Beta[,1]
+  Pred_length[,6,2,,1] = Beta[,1]+Beta[,2]
+  Pred_length[,6,1,,2] = Beta[,1]+Beta[,3]
+  Pred_length[,6,2,,2] = Beta[,1]+Beta[,2]+Beta[,3]
+
+   # recall dimensions are posterior replicate, prey species, age class, strata, season   
+```
+
+Count model:
+
+```{r, analysis_count6}
+  library(glmmTMB)
+  analysis_df = Stomachs_df
+  analysis_df$count = Stomachs_df[,which(colnames(Stomachs_df)=="Saffron cod")]
+  analysis_glmm = glmmTMB(count ~ SealAgeClass+Region+Season,data=analysis_df,family="poisson")
+  summary(analysis_glmm)
+```
+
+```{r, sc_stan2,results=FALSE,cache=TRUE}
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]","beta[3]","beta[4]"))
+
+  Beta = matrix(unlist(samples),10000,4)
+  Pred_otoliths[,6,1,1,1] = exp(Beta[,1])  # Bering adult - summer
+  Pred_otoliths[,6,2,1,1] = exp(Beta[,1]+Beta[,2])  # Bering pup - summer
+  Pred_otoliths[,6,1,2,1] = exp(Beta[,1]+Beta[,3])  # Chukchi adult - summer
+  Pred_otoliths[,6,2,2,1] = exp(Beta[,1]+Beta[,2]+Beta[,3])  # Chukchi pup - summer
+  Pred_otoliths[,6,1,1,2] = exp(Beta[,1]+Beta[,4])  # Bering adult - winter
+  Pred_otoliths[,6,2,1,2] = exp(Beta[,1]+Beta[,2]+Beta[,4])  # Bering pup - winter
+  Pred_otoliths[,6,1,2,2] = exp(Beta[,1]+Beta[,3]+Beta[,4])  # Chukchi adult - winter
+  Pred_otoliths[,6,2,2,2] = exp(Beta[,1]+Beta[,2]+Beta[,3]+Beta[,4])  # Chukchi pup - winter
+
+  # recall dimensions are posterior replicate, prey species, age class, strata, season
+```
+
+### Walleye pollock
+
+```{r, glmm_wp1}
+  library(glmmTMB)
+  analysis_df = Ot_len_df[which(Ot_len_df$FishSpecies=="Walleye pollock"),]
+  cur_glmm = glmmTMB(log(OtolithLength) ~ SealAgeClass+Region+Season+(1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  summary(cur_glmm)
+```
+It would appear both age class and region are viable predictors of otolith size.  However
+there are few samples from the Chukchi Sea, and including this covariate produces highly 
+variable  (and often negative) predictions of otolith length.  We'll thus only
+include age class for posterior predictions:  
+
+```{r, wp_stan1,results=FALSE}
+  analysis_glmm = glmmTMB(log(OtolithLength) ~ SealAgeClass + (1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  library(tmbstan)
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]"))
+  Beta = matrix(unlist(samples),10000,2)
+
+  Pred_length[,7,1,,] = Beta[,1]
+  Pred_length[,7,2,,] = Beta[,1]+Beta[,2]
+
+   # recall dimensions are posterior replicate, prey species, age class, strata, season   
+```
+
+Count model:
+
+```{r, analysis_count7}
+  library(glmmTMB)
+  analysis_df = Stomachs_df
+  analysis_df$count = Stomachs_df[,which(colnames(Stomachs_df)=="Walleye pollock")]
+  analysis_glmm = glmmTMB(count ~ SealAgeClass+Region+Season,data=analysis_df,family="poisson")
+  summary(analysis_glmm)
+```
+
+```{r, wp_stan2,results=FALSE,cache=TRUE}
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]","beta[3]","beta[4]"))
+
+  Beta = matrix(unlist(samples),10000,4)
+  Pred_otoliths[,7,1,1,1] = exp(Beta[,1])  # Bering adult - summer
+  Pred_otoliths[,7,2,1,1] = exp(Beta[,1]+Beta[,2])  # Bering pup - summer
+  Pred_otoliths[,7,1,2,1] = exp(Beta[,1]+Beta[,3])  # Chukchi adult - summer
+  Pred_otoliths[,7,2,2,1] = exp(Beta[,1]+Beta[,2]+Beta[,3])  # Chukchi pup - summer
+  Pred_otoliths[,7,1,1,2] = exp(Beta[,1]+Beta[,4])  # Bering adult - winter
+  Pred_otoliths[,7,2,1,2] = exp(Beta[,1]+Beta[,2]+Beta[,4])  # Bering pup - winter
+  Pred_otoliths[,7,1,2,2] = exp(Beta[,1]+Beta[,3]+Beta[,4])  # Chukchi adult - winter
+  Pred_otoliths[,7,2,2,2] = exp(Beta[,1]+Beta[,2]+Beta[,3]+Beta[,4])  # Chukchi pup - winter
+
+  # recall dimensions are posterior replicate, prey species, age class, strata, season
+```
+
+
+
+### Pacific cod
+
+```{r, glmm_pc1}
+  library(glmmTMB)
+  analysis_df = Ot_len_df[which(Ot_len_df$FishSpecies=="Pacific cod"),]
+  cur_glmm = glmmTMB(log(OtolithLength) ~ SealAgeClass+Region+Season+(1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  summary(cur_glmm)
+```
+We don't have much data here, and no covariate effects are overpowering, so we'll just
+go with an intercept model for predictions:
+
+```{r, pc_stan1,results=FALSE}
+  analysis_glmm = glmmTMB(log(OtolithLength) ~ (1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  library(tmbstan)
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  
+  samples = extract(stan_fit,pars=c("beta"))
+  Beta = unlist(samples)
+
+  Pred_length[,8,,,] = Beta
+```
+
+Count model:
+
+```{r, analysis_count8}
+  library(glmmTMB)
+  analysis_df = Stomachs_df
+  analysis_df$count = Stomachs_df[,which(colnames(Stomachs_df)=="Pacific cod")]
+  analysis_glmm = glmmTMB(count ~ SealAgeClass+Region+Season,data=analysis_df,family="poisson")
+  summary(analysis_glmm)
+```
+
+```{r, pc_stan2,results=FALSE,cache=TRUE}
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]","beta[3]","beta[4]"))
+
+  Beta = matrix(unlist(samples),10000,4)
+  Pred_otoliths[,8,1,1,1] = exp(Beta[,1])  # Bering adult - summer
+  Pred_otoliths[,8,2,1,1] = exp(Beta[,1]+Beta[,2])  # Bering pup - summer
+  Pred_otoliths[,8,1,2,1] = exp(Beta[,1]+Beta[,3])  # Chukchi adult - summer
+  Pred_otoliths[,8,2,2,1] = exp(Beta[,1]+Beta[,2]+Beta[,3])  # Chukchi pup - summer
+  Pred_otoliths[,8,1,1,2] = exp(Beta[,1]+Beta[,4])  # Bering adult - winter
+  Pred_otoliths[,8,2,1,2] = exp(Beta[,1]+Beta[,2]+Beta[,4])  # Bering pup - winter
+  Pred_otoliths[,8,1,2,2] = exp(Beta[,1]+Beta[,3]+Beta[,4])  # Chukchi adult - winter
+  Pred_otoliths[,8,2,2,2] = exp(Beta[,1]+Beta[,2]+Beta[,3]+Beta[,4])  # Chukchi pup - winter
+
+  # recall dimensions are posterior replicate, prey species, age class, strata, season
+```
+
+
+### Yellowfin sole
+
+```{r, glmm_ys1}
+  library(glmmTMB)
+  analysis_df = Ot_len_df[which(Ot_len_df$FishSpecies=="Yellowfin sole"),]
+  cur_glmm = glmmTMB(log(OtolithLength) ~ SealAgeClass+Region+Season+(1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  summary(cur_glmm)
+```
+Looks like an intercept-only model will suffice.
+
+```{r, ys_stan1,results=FALSE}
+  analysis_glmm = glmmTMB(log(OtolithLength) ~ Region+(1|SPEC_NUM),data=analysis_df,REML=FALSE)
+  library(tmbstan)
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  
+  samples = extract(stan_fit,pars=c("beta"))
+  Beta = unlist(samples)
+
+  Pred_length[,9,,,] = Beta
+```
+
+Count model:
+
+```{r, analysis_count9}
+  library(glmmTMB)
+  analysis_df = Stomachs_df
+  analysis_df$count = Stomachs_df[,which(colnames(Stomachs_df)=="Yellowfin sole")]
+  analysis_glmm = glmmTMB(count ~ SealAgeClass+Region+Season,data=analysis_df,family="poisson")
+  summary(analysis_glmm)
+```
+We'll omit season as a predictor of otolith counts for yellowfin sole:
+
+```{r, ys_stan2,results=FALSE,cache=TRUE}
+  set.seed(11111)
+  analysis_glmm = glmmTMB(count ~ SealAgeClass+Region,data=analysis_df,family="poisson")
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]","beta[3]"))
+
+  Beta = matrix(unlist(samples),10000,3)
+  Pred_otoliths[,9,1,1,] = exp(Beta[,1])  # Bering adult 
+  Pred_otoliths[,9,2,1,] = exp(Beta[,1]+Beta[,2])  # Bering pup 
+  Pred_otoliths[,9,1,2,] = exp(Beta[,1]+Beta[,3])  # Chukchi adult 
+  Pred_otoliths[,9,2,2,] = exp(Beta[,1]+Beta[,2]+Beta[,3])  # Chukchi pup 
+
+  # recall dimensions are posterior replicate, prey species, age class, strata, season
+```
+
+### "Other" species
+
+The final thing to do is to run some models investigating the counts of non-target ("other")
+species.
+
+```{r, analysis_count10}
+  library(glmmTMB)
+  analysis_df = Stomachs_df
+  analysis_df$count = Stomachs_df[,which(colnames(Stomachs_df)=="Other")]
+  analysis_glmm = glmmTMB(count ~ SealAgeClass+Region+Season,data=analysis_df,family="poisson")
+  summary(analysis_glmm)
+```
+We'll use all covariates to make these predictions.
+
+```{r, other,results=FALSE,cache=TRUE}
+  set.seed(11111)
+  stan_fit = tmbstan(analysis_glmm$obj,chains=2,iter=10000)
+  samples = extract(stan_fit,pars=c("beta[1]","beta[2]","beta[3]","beta[4]"))
+
+  Beta = matrix(unlist(samples),10000,4)
+  Pred_otoliths[,10,1,1,1] = exp(Beta[,1])  # Bering adult - summer
+  Pred_otoliths[,10,2,1,1] = exp(Beta[,1]+Beta[,2])  # Bering pup - summer
+  Pred_otoliths[,10,1,2,1] = exp(Beta[,1]+Beta[,3])  # Chukchi adult - summer
+  Pred_otoliths[,10,2,2,1] = exp(Beta[,1]+Beta[,2]+Beta[,3])  # Chukchi pup - summer
+  Pred_otoliths[,10,1,1,2] = exp(Beta[,1]+Beta[,4])  # Bering adult - winter
+  Pred_otoliths[,10,2,1,2] = exp(Beta[,1]+Beta[,2]+Beta[,4])  # Bering pup - winter
+  Pred_otoliths[,10,1,2,2] = exp(Beta[,1]+Beta[,3]+Beta[,4])  # Chukchi adult - winter
+  Pred_otoliths[,10,2,2,2] = exp(Beta[,1]+Beta[,2]+Beta[,3]+Beta[,4])  # Chukchi pup - winter
+
+  # recall dimensions are posterior replicate, prey species, age class, strata, season
+```
+
+
+## Output 
+
+Finally, we'll exponentiate our otolith length predictions and save posterior output for future use.  We'll also save otolith length data for some future sanity checking.
+
+```{r, output,results=FALSE,cache=TRUE}
+  Pred_length = exp(Pred_length)
+  Meta = "Posterior distributions for predicted otolith lengths and counts occurring in spotted seal stomachs from the Bering and Chukchi Seas.  Dimensions of each array are posterior replicate, prey species, age class (Adult/Pup), strata (Bering/Chukchi), and season (Summer/Winter).  The order of prey species is pacific herring, rainbow smelt, capelin, sand lance, Arctic cod, saffron cod, walleye pollock, pacific cod, and yellowfin sole.  The 10th entry for otolith counts is for non-target/other species.  Otolith lengths are in mm."
+  Otolith_posteriors = list("Pred_otoliths"=Pred_otoliths,"Pred_length"=Pred_length,Meta=Meta)
+  save(Otolith_posteriors, file="./data/otolith_posteriors.RData")
+  save(Ot_len_df,file="./data/Ot_len_df.RData")
+```
+
+## References

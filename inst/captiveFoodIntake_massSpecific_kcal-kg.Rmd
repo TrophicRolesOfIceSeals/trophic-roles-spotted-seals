@@ -1,0 +1,276 @@
+---
+title: "Captive spotted seal food intake analysis (Mass-specific kcal/kg/day)"
+author: "Brett McClintock"
+date: "`r Sys.Date()`"
+output: pdf_document # use 'html_document' for html
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load and format data
+
+```{r load data, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lubridate)
+
+pupFilter <- 7 # censor pups <=7 months old
+
+raw <- readr::read_csv("./Data/PHOCAS_spotted_seal_diet.csv",na="-",col_types="ffcfcffifif")
+intake <- raw %>% select(Seal,`Month-Year`,Facility, Season, Sex,`Age (years)`,`Age (months)`,`Age class`,`Mean Body Mass (kg)`,`Mean Food Intake (kcals)`,`Mass-specific food intake (kcal/kg)`,`Estimated data`) %>% 
+# rename columns
+          rename(seal = Seal, date = `Month-Year`, facility = Facility, season=Season, sex = Sex, ageYears = `Age (years)`, ageMonths = `Age (months)`, ageClass = `Age class`, mass = `Mean Body Mass (kg)`, intake = `Mean Food Intake (kcals)`, intakems = `Mass-specific food intake (kcal/kg)`, estInd = `Estimated data`) %>% 
+# filter by facility
+          filter(facility %in% c("ASLC","LML")) %>%
+# filter by nonpup
+          filter(ageClass!="pup") %>%
+# remove NAs in response
+          filter(!is.na(intake)) %>%
+          filter(!is.na(intakems)) %>% 
+# remove estimated data
+          filter(estInd==0) %>%
+# add month and year fields
+          mutate(date=lubridate::fast_strptime(date, "%b-%y")) %>%
+          mutate(year=lubridate::year(date)) %>%
+          mutate(month=factor(months.Date(date,abbreviate=TRUE),levels=month.abb)) %>%
+          mutate(monthNum=match(month,month.abb)-1) %>%
+          mutate(yearNum=match(year,seq(min(year),max(year)))) %>%
+          mutate(cosMonth=cos(monthNum*2*pi/12)) %>%
+          mutate(sinMonth=sin(monthNum*2*pi/12)) %>%
+# log(intake)
+          mutate(logintake=log(intake)) %>%
+          mutate(logintakems=log(intakems))
+          
+```
+
+## Scale and center covariates
+```{r standardize}
+intake$ageYears <- scale(intake$ageYears)[,1]   # scale ageYears
+intake$ageMonths <- scale(intake$ageMonths)[,1] # scale ageMonths
+intake$yearNum <- scale(intake$yearNum)[,1]     # scale yearNum
+intake$mass <- scale(intake$mass)[,1]           # scale mass
+
+# center categorical variables
+intake$year <- as.factor(intake$year)
+tmp <- unique((cbind(intake$year,apply(model.matrix(~year,intake),2,function(x) scale(x,scale=FALSE)))[,-2]))
+tmp <- tmp[order(tmp[,1]),-1]
+colnames(tmp) <- gsub("year","",colnames(tmp))
+contrasts(intake$year) <- contr.sum(nlevels(as.factor(intake$year)))
+
+# make adult reference
+intake$ageClass <- factor(intake$ageClass) # remove pup level
+intake$ageClass <- relevel(intake$ageClass,"adult")
+tmp <- unique((cbind(intake$ageClass,apply(model.matrix(~ageClass,intake),2,function(x) scale(x,scale=FALSE)))[,-2]))
+tmp <- tmp[order(tmp[,1]),-1,drop=FALSE]
+colnames(tmp) <- levels(intake$ageClass)[-1]
+contrasts(intake$ageClass) <- tmp
+
+# make Sura (F) reference
+intake$seal <- relevel(intake$seal,"Sura")
+tmp <- unique((cbind(intake$seal,apply(model.matrix(~seal,intake),2,function(x) scale(x,scale=FALSE)))[,-2]))
+tmp <- tmp[order(tmp[,1]),-1,drop=FALSE]
+colnames(tmp) <- levels(intake$seal)[-1]
+contrasts(intake$seal) <- tmp
+
+tmp <- unique((cbind(intake$sex,apply(model.matrix(~sex,intake),2,function(x) scale(x,scale=FALSE)))[,-2]))
+tmp <- tmp[order(tmp[,1]),-1,drop=FALSE]
+colnames(tmp) <- c("F")
+contrasts(intake$sex) <-  tmp
+
+intake$season <- relevel(intake$season,"summer")
+tmp <- unique((cbind(intake$season,apply(model.matrix(~season,intake),2,function(x) scale(x,scale=FALSE)))[,-2]))
+tmp <- tmp[order(tmp[,1]),-1,drop=FALSE]
+colnames(tmp) <- c("winter")
+contrasts(intake$season) <-  tmp
+
+intake$facility <- droplevels(intake$facility)
+tmp <- unique((cbind(intake$facility,apply(model.matrix(~facility,intake),2,function(x) scale(x,scale=FALSE)))[,-2]))
+tmp <- tmp[order(tmp[,1]),-1,drop=FALSE]
+colnames(tmp) <- c("LML")
+contrasts(intake$facility) <-  tmp
+```
+
+```{r data summary}
+summary(intake)
+```
+
+## Fit models
+```{r fit,message=FALSE}
+options(width = 300)
+library(mgcv)
+library(MuMIn)
+
+# fit most general model (oversaturated but establishes all potential covariates in candidate model set)
+modgam <- gam(formula = intakems ~
+                         seal +
+                         yearNum +
+                         sex +
+                         facility +
+                         ageClass*season*sex +
+                         ageClass*cos(monthNum*2*pi/12)*sex + ageClass*sex*sin(monthNum*2*pi/12) +
+                         s(seal, bs = "re") +
+                         s(yearNum),
+              family=gaussian(link="log"),
+              data = intake, na.action = "na.fail")
+
+# fit all combinations
+allcombs <- dredge(modgam,trace=0, subset = 
+      !(`cos(monthNum * 2 * pi/12)` && season) &&
+      !(`sin(monthNum * 2 * pi/12)` && season) &&
+      !(`s(seal, bs = "re")` && seal) &&
+      !(`s(seal, bs = "re")` && sex) &&
+      !(seal && sex) &&
+      !(yearNum && `s(yearNum)`) &&
+      dc(`cos(monthNum * 2 * pi/12)`,`sin(monthNum * 2 * pi/12)`) &&
+      dc(`sin(monthNum * 2 * pi/12)`,`cos(monthNum * 2 * pi/12)`) &&
+      dc(`ageClass:cos(monthNum * 2 * pi/12)`,`ageClass:sin(monthNum * 2 * pi/12)`) &&
+      dc(`ageClass:sin(monthNum * 2 * pi/12)`,`ageClass:cos(monthNum * 2 * pi/12)`) &&
+      dc(`cos(monthNum * 2 * pi/12):sex`,`sex:sin(monthNum * 2 * pi/12)`) &&
+      dc(`sex:sin(monthNum * 2 * pi/12)`,`cos(monthNum * 2 * pi/12):sex`) && 
+      dc(`ageClass:cos(monthNum * 2 * pi/12):sex`,`ageClass:sex:sin(monthNum * 2 * pi/12)`) &&
+      dc(`ageClass:sex:sin(monthNum * 2 * pi/12)`,`ageClass:cos(monthNum * 2 * pi/12):sex`)
+      )
+
+# minimum AIC model
+bestmod <- get.models(allcombs, subset = 1)[[1]]
+```
+
+## Results
+```{r results,fig.dim = c(15, 10)}
+options(width = 300)
+summary(bestmod)
+plot(bestmod)
+
+talpha <- qt(0.975,df=bestmod$df.null)
+
+# only include ASLC facility
+new_data <- tidyr::expand(intake, sex, ageClass, facility="ASLC",monthNum, yearNum,pi=pi)
+
+m_pred <- bind_cols(new_data,
+                      as.data.frame(predict(bestmod, newdata = new_data, se.fit = TRUE, type="response")))
+m_pred$yearNum <- factor(unique(intake$year)[match(m_pred$yearNum,unique(m_pred$yearNum))])
+m_pred <- m_pred %>% mutate(ageClass = fct_relevel(ageClass, c("yearling","juvenile","adult")))
+
+ggplot(m_pred, aes(x = monthNum, y = fit, ymax=fit+talpha*se.fit,ymin=fit-talpha*se.fit,colour = yearNum)) +
+  geom_line(aes(group=yearNum)) +
+  scale_x_continuous(
+  breaks = 0:11, 
+  labels = month.abb) +
+  facet_wrap(~ sex + ageClass,ncol=3) +
+  ylab("Mass-specific intake (kcal/kg/day)") + xlab("month") +
+  guides(color = guide_legend(title = "year")) +
+  geom_ribbon(alpha = 0.15) +
+  scale_color_manual(values = gray.colors(14,start=0,end=0.6))
+
+# model selection and averaging
+options(width = 100)
+ma <- model.avg(allcombs)
+sw(allcombs)
+
+masum<-summary(ma)
+mStable <- masum$msTable[which(masum$msTable$weight>0.005),]
+termCodes <- attr(mStable,"term.codes")
+names(termCodes) <- gsub("s(seal, bs = \"re\")","sealRE",names(termCodes),fixed=TRUE)
+names(termCodes) <- gsub("cos(monthNum * 2 * pi/12)","cosMonth",names(termCodes),fixed=TRUE)
+names(termCodes) <- gsub("sin(monthNum * 2 * pi/12)","sinMonth",names(termCodes),fixed=TRUE)
+round(mStable,2)
+paste0(paste0(termCodes,"=",names(termCodes)),collapse=", ")
+
+#masum$coefmat.subset (model-averaged coefficients)
+#confint(ma) (model-averaged confidence intervals)
+
+# best supported model with ageClass, season, facility, random individual-level, and year effects
+bestmodred <- get.models(allcombs,subset=is.na(sex) & is.na(seal))[[1]]
+summary(bestmodred)
+plot(bestmodred)
+
+talphared <- qt(0.975,df=bestmodred$df.null)
+
+# only include ASLC facility as it's closer to range of free-living spotted seals
+new_datared <- tidyr::expand(intake, ageClass, facility="ASLC",yearNum,monthNum,seal,pi=pi)
+
+# effects to exclude
+exclude <- c("s(seal)","s(yearNum)")
+
+mred_pred <- bind_cols(new_datared,
+                      as.data.frame(predict(bestmodred, newdata = new_datared, se.fit = TRUE, exclude=exclude, type="response")))
+mred_pred <- mred_pred %>% mutate(ageClass = fct_relevel(ageClass, c("yearling","juvenile","adult")))
+
+# remove duplicates as seal and yearNum are being excluded
+mred_pred <- mred_pred %>% filter(seal==seal[1],yearNum==yearNum[1]) %>% arrange(ageClass)
+
+mred_pred$month <- month(mred_pred$monthNum+1,label=TRUE)
+
+mred_pred$lci <- mred_pred$fit-talphared*mred_pred$se.fit
+mred_pred$uci <- mred_pred$fit+talphared*mred_pred$se.fit
+
+mred_pred %>% select(-seal,-yearNum,-facility)
+
+ggplot(mred_pred, aes(x = monthNum, y = fit,  colour = ageClass)) +
+  scale_x_continuous(
+    breaks = seq_along(month.name)-1, 
+    labels = substr(month.name,1,3)
+  ) +
+  geom_line(aes(group=ageClass)) +
+  geom_ribbon(aes(ymin = lci, ymax = uci), alpha=0.3, fill=c("blue","orange","red")[match(mred_pred$ageClass,c("yearling","juvenile","adult"))]) + 
+  ylab("mass-specific intake (kcal/kg/day)") + xlab("month") +
+  guides(color = guide_legend(title = "age class",override.aes=list(fill=NA))) +
+  scale_color_manual(values = c("blue","orange","red"))
+
+mred_pred_table = as.data.frame(mred_pred)
+mred_pred_table = mred_pred_table[,-which(colnames(mred_pred) %in% c("facility","yearNum","seal"))]
+write.csv(mred_pred_table,file="kcal_per_kg_preds.csv")
+
+mred_predlog <- bind_cols(new_datared,
+                      as.data.frame(predict(bestmodred, newdata = new_datared, se.fit = TRUE, exclude=exclude)))
+mred_predlog <- mred_predlog %>% mutate(ageClass = fct_relevel(ageClass, c("yearling","juvenile","adult")))
+
+# remove duplicates as seal and yearNum are being excluded
+mred_predlog <- mred_predlog %>% filter(seal==seal[1],yearNum==yearNum[1]) %>% arrange(ageClass)
+
+mred_predlog$month <- month(mred_predlog$monthNum+1,label=TRUE)
+
+mred_predlog$lci <- mred_predlog$fit-talphared*mred_predlog$se.fit
+mred_predlog$uci <- mred_predlog$fit+talphared*mred_predlog$se.fit
+
+mred_predlog %>% select(-seal,-yearNum,-facility)
+
+ggplot(mred_predlog, aes(x = monthNum, y = fit,  colour = ageClass)) +
+  scale_x_continuous(
+    breaks = seq_along(month.name)-1, 
+    labels = substr(month.name,1,3)
+  ) +
+  geom_line(aes(group=ageClass)) +
+  geom_ribbon(aes(ymin = lci, ymax = uci), alpha=0.3, fill=c("blue","orange","red")[match(mred_pred$ageClass,c("yearling","juvenile","adult"))]) + 
+  ylab("log(mass-specific intake kcal/kg/day)") + xlab("month") +
+  guides(color = guide_legend(title = "age class",override.aes=list(fill=NA))) +
+  scale_color_manual(values = c("blue","orange","red"))
+
+```
+
+We'll now attempt to generate posterior predictions for energy intake that account for correlation between parameter estimates by (1) using the gam.predict function to generate design matrices specific to different combinations of covariates, and (2) simulating gam parameters from a multivariate normal distribution.  This can be viewed as an empirical Bayes posterior predictive procedure.
+
+```{r preds}
+# limit prediction combinations to those omitting seal and year, and restricting to ASLC facility
+
+data_pred <- new_datared
+data_pred <- data_pred %>% filter(seal==seal[1],yearNum==yearNum[1]) %>% arrange(ageClass)
+
+X = predict(bestmodred,newdata=data_pred,type="lpmatrix",exclude=c("s(seal)","s(yearNum)"))
+
+Energy_pred_matrix = matrix(0,dim(X)[1],10000)
+Betas = rmvn(10000,bestmodred$coefficients,vcov(bestmodred))  
+for(i in 1:10000){
+  Energy_pred_matrix[,i] = X %*% Betas[i,]
+}
+Energy_pred_matrix = exp(Energy_pred_matrix)
+
+data_pred$fit = rowMeans(Energy_pred_matrix)
+data_pred$lower = apply(Energy_pred_matrix,1,"quantile",0.025)
+data_pred$upper = apply(Energy_pred_matrix,1,"quantile",0.975)
+
+Energy_predictions = list("pred_data"=data_pred,"pred_matrix"=Energy_pred_matrix)
+save(Energy_predictions,file="./Data/Energy_predictions.RData")
+
+```

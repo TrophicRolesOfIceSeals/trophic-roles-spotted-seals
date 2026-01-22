@@ -1,0 +1,391 @@
+---
+title: "Posterior distributions for spotted seal prey composition (prey mass per kcal)"
+author: "Paul Conn"
+date: '2023-05-02'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Summary
+
+In this document, we take posterior predictions for the length and expected minimum number of fish represented by otoliths in spotted seal stomachs and use these in conjunction with otolith length-fish length conversions, fish morphometrics, and energy content conversions to calculate posterior distributions for prey composition (measured in
+g/kcal).  We do this for 9 target fish prey species, together with another category representing non-target prey species.  We produce separate posterior predictions of prey composition corresponding to 
+two different regions (Bering/Chukchi), two different age classes (non-pup/pup), and two different seasons (summer/winter).  This analysis is part of a larger trophic roles analysis described in the manuscript  "Trophic Roles of Spotted Seals in the Bering and Chukchi Seas" by Boveng et al.  
+
+
+## Load posterior predictions 
+
+We'll start by loading posterior distributions for otolith counts and otolith length that were
+originally produced in the document 'analyze_stomachs.Rmd'.  Let's also take a look at it's structure: 
+
+```{r load1}
+  load("/data/otolith_posteriors.RData")
+  str(Otolith_posteriors)
+```
+The Pred_otoliths and Pred_length objects are 5 dimensional array, where the 2nd, 3rd, 4th, and 5th dimensions correspond to prey type, seal age class (Adult/Pup), region (Bering/Chukchi) and season (Summer/Winter), respectively.  The prey species are documented in the Meta object.  So for instance the following plots a  histogram of predicted otolith lengths in mm for walleye pollock for adult seals in the Bering Sea in the summer:
+
+```{r plot1}
+  hist(Otolith_posteriors$Pred_length[,7,1,1,1])
+```
+Note that there are 10,000 posterior predictions for each level of predictor.  The exact model
+used differs by species and data type; in some cases predictions will be identical for various 
+levels because a simple model was used (e.g., an intercept-only model).
+
+
+### Conversion of otolith length to fish length
+
+
+Next, let's bring in some regression functions to perform conversion of otolith length (mm) to fish length (mm):
+
+```{r load2}
+  load('./data/otolith_regressions.RData')  #from otolith_length_modeling_and_lit.Rmd
+```
+
+Note that in these functions (e.g., "AC_OL_to_FL") the *type* of
+fish length varies.  It can be fork length (FL), total length (TL), or standard length (SL) depending
+on the morphology of the species is measured.  There aren't any variances associated with these regressions, so we'll lose outon a small source of uncertainty there.  There are also to equations for sand lance, one
+for Arctic sand lance and one for Pacific sand lance.  However, these are very similar, and for simplicity
+we'll only use the one for Arctic sand lance here.
+
+Let's convert our otolith length predictions to fish lengths by applying these regression conversions:
+
+```{r OL_to_FL}
+  Fish_length_preds = Otolith_posteriors$Pred_length
+  Fish_length_preds[,1,,,]= PH_OL_to_FL(Fish_length_preds[,1,,,])
+  Fish_length_preds[,2,,,]= RS_OL_to_SL(Fish_length_preds[,2,,,])
+  Fish_length_preds[,3,,,]= Cap_OL_to_TL(Fish_length_preds[,3,,,])
+  Fish_length_preds[,4,,,]= ASL_OL_to_FL(Fish_length_preds[,4,,,])
+  Fish_length_preds[,5,,,]= AC_OL_to_FL(Fish_length_preds[,5,,,])
+  Fish_length_preds[,6,,,]= SC_OL_to_FL(Fish_length_preds[,6,,,])
+  Fish_length_preds[,7,,,]= WP_OL_to_FL(Fish_length_preds[,7,,,])
+  Fish_length_preds[,8,,,]= PC_OL_to_FL(Fish_length_preds[,8,,,])
+  Fish_length_preds[,9,,,]= YS_OL_to_FL(Fish_length_preds[,9,,,])
+```
+
+This is what some of the predicted fish lengths look like (note these are predictions of a mean, rather than the complete range of fish lengths):
+
+```{r plot_length,warning=F}
+  library(ggplot2)
+  #library(ggplotHelper)
+  dimnames(Fish_length_preds)=list(
+    rep("Prediction",10000),
+    c("Pacific herring","Rainbow smelt","Pacific capelin","Sand lance","Arctic cod", 
+      "Saffron cod","Walleye pollock","Pacific cod","Yellowfin sole"),
+    c("Non-pup","Pup"),
+    c("Bering","Chukchi"),
+    c("Summer","Winter")
+  )
+  Plot_df = reshape::melt(Fish_length_preds,varnames=c("Dummy","Species","Age_class","Region","Season"))
+  Plot_df = Plot_df[-which(Plot_df$Age_class=="Pup"),]
+  Plot_df$Region_season = apply(Plot_df[,c(4,5)],1,paste,collapse='-')
+  Plot_df1 = Plot_df[which(Plot_df$Region_season %in% c("Bering-Winter","Chukchi-Summer")),]
+  #plot a different color for which season-region is the same
+  Comb_sp = c("Pacific herring","Pacific capelin","Walleye pollock","Pacific cod","Yellowfin sole")
+  Which_comb = which(Plot_df1$Species %in% Comb_sp)
+  Plot_df1$Region_season[Which_comb]="Combined"
+  Plot_df1$Species = factor(as.character(Plot_df1$Species),levels=c("Pacific capelin","Saffron cod","Arctic cod","Pacific herring","Sand lance","Rainbow smelt","Walleye pollock","Pacific cod","Yellowfin sole"))
+  ggplot(Plot_df1)+geom_density(aes(x=value,fill=Region_season,group=Region_season))+ facet_wrap(vars(Species))+  xlab("Predicted fish length (mm)") + ylab("Probability density") + scale_fill_manual( values = c("#F8766D","#00BFC4","#C77CFF"))
+```
+
+This is in fork length for most species (exceptions being total length for capelin and standard length for rainbow smelt).  For those of used to thinking in inches, a 200 mm fish is about 8 inches.
+
+As a sanity check, let's load actual otolith lengths from fish stomachs and see what the distribution of fish length looks like if we apply an otolith length to fish length conversion. We'll just do this for one species (Pacific herring) 
+
+```{r sanity}
+load("Ot_len_df.RData")
+Herring_len = Ot_len_df$OtolithLength[which(Ot_len_df$FishSpecies=="Pacific herring")]
+hist(PH_OL_to_FL(Herring_len))
+```
+So, our prediction of 220 mm or so for Pacific herring FL resides right in the middle of our "observed" length distribution (quotation marks because these are transformed using a fitted otolith length to fish length conversion).
+
+
+### Conversion of fish length to fish mass
+
+Now let's convert our posterior predictions of length to posterior predictions of mass.
+We'll first load weight-length regressions that were produced using "Len_Wt.R."  These
+are functions that convert various length measurements (in mm) to wet weight (in g).  
+
+```{r Length_to_weight}
+  load('weight_length_regressions.RData')  #Len_Wt.R
+```
+
+The astute reader will note that, based on function name endings, there are several mismatches with
+the length types (i.e., FL, SL, TL) in our length posteriors with those required for our length-to-mass
+conversions.  In particular, we first need to:
+
+- convert rainbow smelt length in SL to length in FL
+- convert capelin length in TL to capelin length in FL
+- convert Arctic cod length in FL to TL
+- convert saffron cod length in FL to TL
+
+It also "looks" like we need to convert FL to TL for Pacific cod and yellowfin sole, but these species have 
+no fork so, effectively fork length equals total length.  The remaining four species are also okay as is.
+
+I obtained linear transformations of these length values from FishBase (https://www.fishbase.se/; accessed 2 May 2023).  Let's set up conversion functions using these values.
+
+```{r Length_to_length}
+  RS_SL_to_FL <- function(x) 1.165*0.818*x  #goes SL --> TL --> FL
+  Cap_TL_to_FL <- function(x) 0.966*x
+  AC_FL_to_TL <- function(x) 1.061*x
+  SC_FL_to_TL <- function(x) x/.995  # inverse conversion
+```
+
+Now, let's convert our posteriors for fish length to wet mass in grams:
+
+```{r Length_to_weight2}
+  Fish_weight_preds = Otolith_posteriors$Pred_length
+  Fish_weight_preds[,1,,,]= PH_FL_to_wetwt(Fish_length_preds[,1,,,])
+  Fish_weight_preds[,2,,,]= RS_FL_to_wetwt(RS_SL_to_FL(Fish_length_preds[,2,,,]))
+  Fish_weight_preds[,3,,,]= Capelin_FL_to_wetwt(Cap_TL_to_FL(Fish_length_preds[,3,,,]))
+  Fish_weight_preds[,4,,,]= SL_FL_to_wetwt(Fish_length_preds[,4,,,])
+  Fish_weight_preds[,5,,,]= AC_TL_to_wetwt(AC_FL_to_TL(Fish_length_preds[,5,,,]))
+  Fish_weight_preds[,6,,,]= SC_TL_to_wetwt(SC_FL_to_TL(Fish_length_preds[,6,,,]))
+  Fish_weight_preds[,7,,,]= WP_FL_to_wetwt(Fish_length_preds[,7,,,])
+  Fish_weight_preds[,8,,,]= PC_TL_to_wetwt(Fish_length_preds[,8,,,])
+  Fish_weight_preds[,9,,,]= YS_TL_to_wetwt(Fish_length_preds[,9,,,])
+```
+
+Let's take a look at some of the fish weight predictions.  Specifically, we'll produce smoothed histograms
+of predictions for fish consumed by adult seals in the Bering Sea during winter, and in the Chukchi Sea during summer (predictions for pups and other combinations of sea/season are available but it's a lot to 
+plot together).
+
+  # recall dimensions are posterior replicate, prey species, age class, strata, season
+
+```{r plot_weight,warning=F}
+  library(ggplot2)
+  #library(ggplotHelper)
+  dimnames(Fish_weight_preds)=list(
+    rep("Prediction",10000),
+    c("Pacific herring","Rainbow smelt","Pacific capelin","Sand lance","Arctic cod", 
+      "Saffron cod","Walleye pollock","Pacific cod","Yellowfin sole"),
+    c("Non-pup","Pup"),
+    c("Bering","Chukchi"),
+    c("Summer","Winter")
+  )
+  Plot_df = reshape::melt(Fish_weight_preds,varnames=c("Dummy","Species","Age_class","Region","Season"))
+  Plot_df$Region_season = ""
+  Plot_df[which(Plot_df$Species=="Rainbow smelt"),"Region_season"]=as.character(Plot_df[which(Plot_df$Species=="Rainbow smelt"),"Region"])
+  Plot_df[which(Plot_df$Species=="Sand lance"),"Region_season"]=as.character(Plot_df[which(Plot_df$Species=="Sand lance"),"Region"])
+  Plot_df[which(Plot_df$Species=="Arctic cod"),"Region_season"]=as.character(Plot_df[which(Plot_df$Species=="Arctic cod"),"Region"])
+  Plot_df[which(Plot_df$Species=="Saffron cod"),"Region_season"]=as.character(Plot_df[which(Plot_df$Species=="Saffron cod"),"Season"])
+  Which_comb = which(Plot_df$Species %in% Comb_sp)
+  Plot_df$Region_season[Which_comb]="Combined"
+  Plot_df$Region_season = factor(Plot_df$Region_season,levels=c("Bering","Chukchi","Summer","Winter","Combined"))
+Plot_df$Species = factor(as.character(Plot_df$Species),levels=c("Pacific capelin","Saffron cod","Arctic cod","Pacific herring","Sand lance","Rainbow smelt","Walleye pollock","Pacific cod","Yellowfin sole"))
+  Plot_df_pups = Plot_df[which(Plot_df$Age_class=="Pup"),]
+  Plot_df = Plot_df[-which(Plot_df$Age_class=="Pup"),]
+
+  wt_plot = ggplot(Plot_df)+geom_density(aes(x=value,fill=Region_season,group=Region_season))+ facet_wrap(vars(Species)) + xlim(c(0,127)) + ylim(c(0,0.47)) + xlab("Fish mass (g)") + ylab("Probability density")+ scale_fill_manual( values = c("#990000","#F8766D","#00BFC4","#006600","#C77CFF"),name="Region/Season")
+  wt_plot
+  png('wt_histograms.png',width = 8, height = 8, units='in', res = 600)
+    wt_plot
+  dev.off()
+  #note I looked at the underlying distributions and the apparent breaks in e.g. rainbow smelt are just an issue
+  #with geom_density
+```
+
+We can produce a similar plot for pups...
+
+```{r plot_weight_pups,warning=F}
+  wt_plot_pups = ggplot(Plot_df_pups)+geom_density(aes(x=value,fill=Region_season,group=Region_season))+ facet_wrap(vars(Species)) + xlim(c(0,127)) + ylim(c(0,0.47)) + xlab("Fish mass (g)") + ylab("Probability density")+ scale_fill_manual( values = c("#990000","#F8766D","#00BFC4","#006600","#C77CFF"),name="Region/Season")
+  wt_plot_pups
+  png('wt_histograms_pups.png',width = 8, height = 8, units='in', res = 600)
+    wt_plot_pups
+  dev.off()
+  #note I looked at the underlying distributions and the apparent breaks in e.g. rainbow smelt are just an issue
+  #with geom_density
+```
+
+There is also variation in the expected number of prey items identified in seal stomachs:
+
+```{r plot_counts,warning=F}
+  library(ggplot2)
+  #library(ggplotHelper)
+  Counts = Otolith_posteriors$Pred_otoliths
+  dimnames(Counts)=list(
+    rep("Prediction",10000),
+    c("Pacific herring","Rainbow smelt","Pacific capelin","Sand lance","Arctic cod", 
+      "Saffron cod","Walleye pollock","Pacific cod","Yellowfin sole","Other"),
+    c("Non-pup","Pup"),
+    c("Bering","Chukchi"),
+    c("Summer","Winter")
+  )
+  Plot_df = reshape::melt(Counts,varnames=c("Dummy","Species","Age_class","Region","Season"))
+  Plot_df = Plot_df[-which(Plot_df$Age_class=="Pup"),]
+  Plot_df$Region_season = apply(Plot_df[,c(4,5)],1,paste,collapse='-')
+  Plot_df1 = Plot_df[which(Plot_df$Region_season %in% c("Bering-Summer","Bering-Winter","Chukchi-Summer")),]
+  Plot_df1$Region_season = factor(Plot_df1$Region_season,levels=c("Chukchi-Summer","Bering-Winter","Bering-Summer"))
+  count_plot = ggplot(Plot_df1)+geom_density(aes(x=value,fill=Region_season,group=Region_season))+ facet_wrap(vars(Species),ncol=2,scales="free_y") + xlab("Expected count") + xlim(c(0,12)) + ylab("Probability density") +  scale_x_continuous(breaks=c(0,5,10))
+  count_plot
+  png("expected_counts.png")
+    count_plot
+  dev.off()
+  
+  save(Plot_df1,file="Plot_data_otolith_counts.RData")
+
+  Plot_df1$Region_season_char <- as.character(Plot_df1$Region_season)
+  Plot_df1$Species = factor(as.character(Plot_df1$Species),levels=c("Pacific capelin","Saffron cod","Arctic cod","Pacific herring","Sand lance","Rainbow smelt","Walleye pollock","Pacific cod","Yellowfin sole","Other"))
+  levels(Plot_df1$Species)=c("Pacific capelin","Saffron cod","Arctic cod","Pacific herring","Sand lance","Rainbow smelt","Walleye pollock","Pacific cod","Yellowfin sole","*Other fish*")
+  library(ggtext)
+  count_boxplot = ggplot(Plot_df1)+geom_boxplot(aes(x=value,color=Region_season_char,group=Region_season_char))+ facet_wrap(vars(Species),ncol=2)+
+    xlab("Expected count of fish per stomach")+theme(strip.text = ggtext::element_markdown(),axis.text.y=element_blank(),panel.grid.major.y=element_blank(),panel.grid.minor.y=element_blank(),  
+        axis.ticks.y=element_blank(),text = element_text(size=12))+guides(color=guide_legend(title="Region-Season",order=2))
+  count_boxplot
+  
+  png("expected_counts_boxplot.png",width = 8, height = 8, units='in', res = 600)
+    count_boxplot
+  dev.off()
+```
+
+Ultimately the expected fraction of calories devoted to a particular
+species is a function of the expected number and weight of species consumed, as well as the energy content of different prey items.  Let's try to incorporate that information as well.  Our first goal will be to calculate the expected kcal represented by the otoliths of each prey species (stratified by age, region, and season).  Since we don't have any information for the "Other" category, we'll just use the mean for the other species (both for expected mass and energy content).
+
+```{r energy_content}
+load("energy_mass_regressions.RData") #from mass_energy.Rmd
+Tot_kcal = array(dim=c(10000,10,2,2,2))
+Kcal_per_fish = Fish_weight_preds
+Kcal_per_fish[,1,,,]=PH_WetMass_to_kCal(Fish_weight_preds[,1,,,])
+Kcal_per_fish[,2,,,]=RS_WetMass_to_kCal(Fish_weight_preds[,2,,,])
+Kcal_per_fish[,3,,,]=Cap_WetMass_to_kCal(Fish_weight_preds[,3,,,])
+Kcal_per_fish[,4,,,]=SL_WetMass_to_kCal(Fish_weight_preds[,4,,,])
+Kcal_per_fish[,5,,,]=AC_WetMass_to_kCal(Fish_weight_preds[,5,,,])
+Kcal_per_fish[,6,,,]=SC_WetMass_to_kCal(Fish_weight_preds[,6,,,])
+Kcal_per_fish[,7,,,]=WP_WetMass_to_kCal(Fish_weight_preds[,7,,,])
+Kcal_per_fish[,8,,,]=PC_WetMass_to_kCal(Fish_weight_preds[,8,,,])
+Kcal_per_fish[,9,,,]=YS_WetMass_to_kCal(Fish_weight_preds[,9,,,])
+mean_kcal = mean(as.vector(Kcal_per_fish))
+
+for(isp in 1:9)Tot_kcal[,isp,,,]=Otolith_posteriors$Pred_otoliths[,isp,,,]*Kcal_per_fish[,isp,,,]
+Tot_kcal[,10,,,]= Otolith_posteriors$Pred_otoliths[,10,,,]* mean_kcal
+
+```
+
+Now, let's use these to compute $\pi_{ratk}$, the proportion of kcal attributable to each prey species.  We'll first do this assuming no invertebrate consumption and then by adjusting for $\gamma$, the proportion of calories attributable to invertebrates.
+We'll do this over each poseterior prediction replicate in order to obtain posterior predictions for 
+$\pi_{ratk}$ as well.
+
+
+```{r energy_content2}
+Pi = Tot_kcal
+for(iage in 1:2){
+  for(istrata in 1:2){
+    for(iseason in 1:2){
+      for(irep in 1:10000){
+        Pi[irep,,iage,istrata,iseason]=
+          Tot_kcal[irep,,iage,istrata,iseason]/sum(Tot_kcal[irep,,iage,istrata,iseason])
+      }
+    }
+  }
+}
+# recall dimensions are posterior replicate, prey species, age class, strata, season
+
+#invertebrates
+Prop_invert = rnorm(10000,0.14,0.023)
+invert_kcal_per_g = 1.02  #c_{11} in text
+fish_kcal_per_g = sum(Kcal_per_fish)/sum(Fish_weight_preds)      #c_{fish} in text
+Gamma= Prop_invert*invert_kcal_per_g / (Prop_invert*invert_kcal_per_g + (1-Prop_invert)*fish_kcal_per_g)
+
+for(iage in 1:2){
+  for(istrata in 1:2){
+    for(iseason in 1:2){
+      for(isp in 1:10){
+        Pi[,isp,iage,istrata,iseason]=Pi[,isp,iage,istrata,iseason]*(1-Gamma)
+      }
+    }
+  }
+}
+
+```
+
+The $\pi$ values are dimensionless.  Another way to look at it is kcal/kcal: the proportion of energy
+from each species divided by the total energy in seal stomachs.  In order to make inference about total
+biomass consumed, we need to have the units be mass/energy. That is, the mass (e.g., grams) of each prey species for each kcal consumed.  To do so, we divide by $c_{ratk}$, the energy content in kcal per unit mass in g.
+However, this is complicated by the fact that $c_{ratk}$ values vary as a function of fish mass.  However, we can use the predicted size of fish encountered - calculated separately for region, age, season, and species as modeled previously - to calculate $c_{ratk}$.  Note that we're imposing a mean value for ("Other") prey items here since we don't really have a good idea of $c_{ratk}$ for these fish.
+
+```{r energy_content3}
+C = Kcal_per_fish/Fish_weight_preds
+C_other = array(0,dim=c(10000,10,2,2,2))
+C_other[,1:9,,,]=C
+C_other[,10,,,]= apply(C,c(1,3,4,5),'mean') #other fish averages will be region, season, age specific and include uncertainty
+B = Pi[,1:10,,,]/C_other
+  dimnames(B)=list(
+    rep("Prediction",10000),
+    c("Pacific herring","Rainbow smelt","Pacific capelin","Sand lance","Arctic cod", 
+      "Saffron cod","Walleye pollock","Pacific cod","Yellowfin sole","Other fish"),
+    c("Non-pup","Pup"),
+    c("Bering","Chukchi"),
+    c("Summer","Winter")
+  )
+```
+
+Now for the fun part: let's take a look at what these look like for our various categories.
+To make things easier to plot, we'll arrange compositional bar plots to provide posterior mean predictions
+for each combination of age (Non-pup,Pup), region (Bering, Chukchi), and season (Summer, Winter).  So for instance we'll designate pup-Bering-summer as P-B-S.
+
+```{r plot_composition,warning=FALSE}
+B_means = apply(B,c(2,3,4,5),mean)
+Plot_df = reshape::melt(B_means,varnames=c("Species","Age_class","Region","Season"))
+Plot_df$Age_class = as.character(Plot_df$Age_class)
+Plot_df$Season = as.character(Plot_df$Season)
+Plot_df$Region = as.character(Plot_df$Region)
+# for(irow in 1:nrow(Plot_df)){
+#   for(icol in 2:4){
+#     Plot_df[irow,icol]=substr(Plot_df[irow,icol],1,1)
+#   }
+# }
+Plot_df$Age_Region_Season = factor(apply(Plot_df[,2:4],1,paste,collapse="-"))
+Plot_df$Species = factor(Plot_df$Species,levels=c("Pacific capelin","Saffron cod","Arctic cod","Pacific herring","Sand lance","Rainbow smelt","Walleye pollock","Pacific cod","Yellowfin sole","Other fish"))
+
+# comp_plot <- ggplot(Plot_df,aes(Age_Region_Season))+
+#   geom_bar(aes(fill=Species,weight=value),width=0.5) + 
+#   theme(axis.text.x = element_text(angle=65, vjust=0.6))+
+#   ylab('Fish mass (g) per kcal consumed')+
+#   xlab('Age-Region-Season')
+# comp_plot
+# 
+# png('mass_by_kcal_composition.png',width =6, height = 6, units='in', res = 600)
+#   comp_plot
+# dev.off()
+
+```
+```{r plot_composition2,warning=FALSE}
+Plot_df$Season_Age = factor(apply(Plot_df[,c(4,2)],1,paste,collapse="_"),levels=c("Summer_Pup","Summer_Non-pup","Winter_Pup","Winter_Non-pup"))
+
+Plot_df$Region[which(Plot_df$Region=="Chukchi")]="Chukchi-Beaufort"
+
+addline_format <- function(x,...){
+    gsub('_','\n',x)
+}
+
+comp_plot <- ggplot(Plot_df,aes(Season_Age))+
+  geom_bar(aes(fill=Species,weight=value),width=0.5) + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))+
+  facet_wrap(~Region)+
+  scale_x_discrete(labels=addline_format(c("Summer,_Pup","Summer,_Non-pup","Winter,_Pup","Winter,_Non-pup")))+
+  ylab('Fish mass (g) per kcal consumed')+
+  xlab('Season and age class')+
+     scale_fill_discrete(labels = c(
+     "Pacific capelin","Saffron cod","Arctic cod","Pacific herring","Sand lance", 
+     "Rainbow smelt","Walleye pollock","Pacific cod","Yellowfin sole",
+     expression(italic("Other fish"))))
+
+comp_plot
+
+png('mass_by_kcal_composition2.png',width =6, height = 6, units='in', res = 600)
+  comp_plot
+dev.off()
+
+```
+
+
+And finally, we'll save the B array to make population level inference:
+
+```{r saveB}
+save(B,file="./Data/prey_composition_g_kcal.RData")
+```
+
+
+

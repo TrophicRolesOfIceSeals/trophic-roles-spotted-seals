@@ -1,0 +1,286 @@
+---
+title: "Spotted_otolith_regressions"
+author: "Paul Conn"
+date: '2023-01-10'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Purpose
+
+In this document, I describe data and analyses that are available to establish relationships between fish otolith size (length) and fish size (length).  Ultimately, we want to use these relationships to translate the lengths of otoliths found in spotted seal stomachs from the Bering and Chukchi Seas to the lengths of fish they represent.  
+
+For most fish species of interest, we have both data from NOAA-AFSC's age and growth lab as well as regression estimates from various studies in the literature.  The challenge then is to decide which data and/or existing estimates are most appropriate to use for the otoliths in spotted seal stomachs harvested by Alaska Natives.  Where possible, we should give priority to data that are collected from the region of interest (Bering and Chukchi seas), with priority to the period where spotted seal otoliths were collected (2000-present).  Using fish samples from other areas or time periods may not accurately characterize the otolith length - fish length relationship because ecosystem composition could vary considerably.  Finally, a cursory examination of otoliths in spotted seal stomachs revealed that spotted seals mostly consume small fish - this can cause extrapolation bias when studies develop linear relationships between fish and otolith size based primarily on older fish;  we should thus seek to use relationships developed from a wide range of sizes that look to fit the data for small fish well.  Alternatively, and perhaps preferably, we could develop our own regressions if we have enough data, and entertain nonlinear formulations that fit different size ranges of fish equally well.   
+
+## A broad overview of available data
+
+To begin, let's see how much data we have from the AFSC age and growth lab.
+
+```{r data}
+Data <- read.csv('./data/otolith_data_for_Paul.csv')
+
+#limit data to those records with otolith length and fish length
+Data <- Data[which(is.na(Data$length)==FALSE),]
+Data <- Data[which(is.na(Data$fish_length)==FALSE),]
+
+#summarize years included
+hist(Data$collection_year)
+
+#summarize number of records by species
+Species = as.factor(Data$common_name)
+summary(as.factor(Data$common_name))
+```
+
+So it looks like we have substantial sample sizes for at least 4 fish species of interest (Saffron cod looks a little low).  Let's compare these to what's available in the literature.  For remaining species (Pacific capelin, Pacific herring, rainbow smelt, sand lance) we'll clearly need to use regression results from the literature.  Let's consider species one by one to see what might be best to use.  We'll start with the species we have a lot of data for.
+
+## Arctic cod
+
+Let's start by doing some basic plotting to look at relationships and underlying fish size distributions.
+
+```{r ACplot}
+AC_data <- Data[which(Data$common_name=="Arctic cod"),]
+
+plot(AC_data$length,AC_data$fish_length)
+```
+These data represent 229 otoliths; by contrast, other studies in the literature use 1,304 otoliths (Helser et al. 2017), 166 otoliths (Walker 2017), and 46 otoliths (Harvey 2000).  The choice, then, seems to be whether to go with the Helser et al. somewhat dated estimates (data were gathered in 1976, 1979, and 2012) with a higher sample size, or fitting our own model to AFSC data.  Let's see what the Helser et al. regression looks like when plotted over the AFSC data.
+
+```{r ACplot2}
+plot(AC_data$length,AC_data$fish_length)
+lengths = c(3:10)
+AC_OL_to_FL_helser <- function(OL) (OL-.279)/.039 #this study used inverted regression structure
+lines(lengths,AC_OL_to_FL_helser(lengths))
+```
+So it looks like the Helser et al. regression seems to fit the current data well. Owing to the much higher sample sizes, let's just use the Helser et al. relationship. 
+
+```{r ACfunc}
+AC_lm = lm(fish_length~length,data=AC_data)
+
+AC_OL_to_FL <- AC_OL_to_FL_helser
+```
+
+## Pacific cod
+
+In this case, a good amount of AFSC data comes from the Gulf of Alaska:
+
+```{r PCdata}
+PC_data <- Data[which(Data$common_name=="Pacific cod"),]
+summary(as.factor(PC_data$region))
+```
+We could just use Bering Sea data, or all the data.  Maybe we should plot them over each other to see if there are persistent differences.
+
+```{r PCplot}
+GOA_data <- PC_data[which(PC_data$region=="GOA"),]
+Bering_data <- PC_data[which(PC_data$region=="BS"),]
+plot(GOA_data$length,GOA_data$fish_length,col="blue")
+points(Bering_data$length,Bering_data$fish_length)
+```
+
+I can't really see any difference here. However, this does bring up the issue that there aren't very many observations for smaller PCod.  (e.g., FL < 300).
+
+From the literature, there appears to be one regression for otolith length to fork length in Harvey (2000) - however sample sizes were on the smaller side ($n=110$), and though the range of FL  (100 - 1,060 mm) included at least one small fish, we can't really say how many small fish were in there.  Munk (2012) established a regression formulat based on a much higher sample size ($n=4539$), but examinations of their report by H. Ziel suggested that their equation might not be appropriate for fish less than 300 mm.  It seems as if we might be best off developing our own; and that some slight nonlinearity might be warranted.  Let's look at a sequence of polynomial regression models (including up to a cubic).
+
+```{r PCreg}
+PC_data$length2 = PC_data$length^2
+PC_data$length3 = PC_data$length^3
+
+lm1 <- lm(fish_length ~ length,data=PC_data)
+lm2 <- lm(fish_length ~ length + length2,data=PC_data)
+lm3 <- lm(fish_length ~ length + length2 + length3,data=PC_data)
+
+extractAIC(lm1)
+extractAIC(lm2)
+extractAIC(lm3)
+```
+
+It looks like the cubic model is strongly favored based on AIC; let's see what these relationships look like when plotted.
+
+```{r PCplot2}
+plot(PC_data$length,PC_data$fish_length)
+length = c(3:30)
+PC_OL_to_FL1 <- function(OL) -176.05 + 43.79*OL
+PC_OL_to_FL2 <- function(OL) -147.18 + 39.07*OL + 0.174*OL^2
+PC_OL_to_FL3 <- function(OL) 142.87 - 37.503*OL + 6.20*OL^2 - 0.147*OL^3
+
+lines(length,PC_OL_to_FL1(length),col='blue')
+lines(length,PC_OL_to_FL2(length),col='red')
+lines(length,PC_OL_to_FL3(length),col='green')
+```
+
+Hmmm, none of these models look particularly good; the linear and quadratic models don't capture small fish very well, and the cubic looks prone to extrapolation bias in length ranges less than we've observed here.  Perhaps the thing to do is to fit a piecewise model.  The data actually look pretty linear starting at $OL \ge 8$ or so.  So let's split data that way and fit too separate (linear) regressions for $OL < 8$ and $OL \ge 8$.
+
+```{r PCpiecewise}
+PC_data1 = PC_data[which(PC_data$length<8),]
+PC_data2 = PC_data[which(PC_data$length>=8),]
+lm1 <- lm(fish_length~length,data=PC_data1)
+lm2 <- lm(fish_length~length,data=PC_data2)
+
+PC_OL_to_FL <- function(OL){
+  Which_low = which(OL<8)
+  Which_high = which(OL>=8)
+  FL = OL
+  FL[Which_low] = -47.64 + 27.41*OL[Which_low]
+  FL[Which_high]= -208.653 + 45.725*OL[Which_high]
+  FL
+}
+
+plot(PC_data$length,PC_data$fish_length)
+length1 = c(20:80)/10
+length2 = c(80:300)/10
+lines(length1,PC_OL_to_FL(length1),col='green')
+lines(length2,PC_OL_to_FL(length2),col='green')
+```
+
+That looks a bit better.
+
+## Walleye pollock
+
+Let's start out by looking for possible regional differences in the otolith - fork length relationship.
+
+```{r WPplot}
+WP_data <- Data[which(Data$common_name=="Walleye pollock"),]
+summary(as.factor(WP_data$region))
+GOA_data <- WP_data[which(WP_data$region=="GOA"),]
+Bering_data <- WP_data[which(WP_data$region=="BS"),]
+plot(GOA_data$length,GOA_data$fish_length,col="blue")
+points(Bering_data$length,Bering_data$fish_length)
+```
+
+In this case, there's some indication that larger walleye pollock have a different otolith length to fork length relationship in the Bering and Gulf of Alaska.  In particular, fish with otolith lengths between 15 and 20 mm seem to have higher fork lengths in the Bering Sea than they do in the Gulf.  Let's remove these larger GOA fish.  There also appears to be a slightly curvilinear shape to the relationship, with an inflection point somewhere around 13 mm (OL).  Let's fit a piecewise model like we did in the PCod example.
+
+```{r WPpiecewise}
+WP_data <- WP_data[-which(WP_data$region=="GOA" & WP_data$length>13),]
+WP_data1 = WP_data[which(WP_data$length<13),]
+WP_data2 = WP_data[which(WP_data$length>=13),]
+lm1 <- lm(fish_length~length,data=WP_data1)
+lm2 <- lm(fish_length~length,data=WP_data2)
+
+WP_OL_to_FL <- function(OL){
+  Which_low = which(OL<13)
+  Which_high = which(OL>=13)
+  FL = OL
+  FL[Which_low] = -5.463 + 21.702*OL[Which_low]
+  FL[Which_high]= 2.087 + 25.135*OL[Which_high]
+  FL
+}
+
+plot(WP_data$length,WP_data$fish_length)
+length1 = c(20:129)/10
+length2 = c(130:300)/10
+lines(length1,WP_OL_to_FL(length1),col='green')
+lines(length2,WP_OL_to_FL(length2),col='green')
+
+```
+
+The two piecewise models have a notable gap at 13 mm which is perhaps not ideal, but this might be the best we can do.
+
+Other regressions in the literature include Harvey (2000), Orchard (2001), Frost & Lowry (1981), Munk (2012) and Zeppelin et al. (2004).  The first two citations had low sample size and poor fits to small fish.  The Frost and Lowry analysis does include a piecewise formulation (with a cut-off at 10mm); however sample sizes are smaller than here and the data are from the 1970s.  Munk (2012) have very high sample sizes ($n = 4736$), but H. Ziel indicated that their equation might not be appropriate for small pollock $<300 mm$.  Finally, Zeppelin et al. have reasonably high sample sizes ($n=504$) and a decent range of fish sizes.  However, data are little older than we have here, sample sizes are slightly smaller, and there is no regression figure to evaluate goodness-of-fit. So, it probably makes sense to go with AFSC data here.
+
+## Yellowfin sole
+
+Yellowfin sole data are missing a region designation, but they have latitude/longitude so we can plot where the data were obtained to get a picture of where the data are coming from.
+
+```{r YSma}
+library(sf)
+YS_data <- Data[which(Data$common_name=="Yellowfin sole"),]
+YS_sf = st_as_sf(YS_data, coords = c("longitude","latitude"), remove = FALSE,crs = st_crs(4326))
+#calculate proportion area covered by land and remove cells with >99% of area on land
+AK = read_sf('c:/users/paul.conn/git/BeaufortPower/shapefiles/ak_dcw.shp')
+AK = st_transform(AK,st_crs(YS_sf))
+Russia = read_sf('c:/users/paul.conn/git/BeaufortPower/shapefiles/russia_dcw.shp')
+Russia = st_transform(Russia,st_crs(YS_sf))
+Land=st_union(st_union(AK),st_union(Russia))
+library(ggplot2)
+ggplot()+geom_sf(data=YS_sf,color="blue",size=3)+geom_sf(data=Land)
+```
+That map looks funky, but is probably good enough for our purposes.  The data are all coming from the Bering Sea (including Bristol Bay).  Let's see what the otolith length - fish length data points look like.
+
+```{r YSplot}
+YS_data <- Data[which(Data$common_name=="Yellowfin sole"),]
+plot(YS_data$length,YS_data$fish_length)
+```
+This looks pretty linear.  Let's keep it simple and fit a linear regression model here.
+
+```{r YSreg}
+YS_lm = lm(fish_length~length,data=YS_data)
+
+YS_OL_to_FL <- function(OL){-3.117+38.101*OL}
+plot(YS_data$length,YS_data$fish_length)
+lengths = c(0:45)/10
+lines(lengths,YS_OL_to_FL(lengths))
+
+```
+That looks pretty good to me.  I would suggest just using this; the other regressions available in the literature had much smaller sample sizes (Walker et al. 2017: $n=46$; Harvey 2000: $n=26$)
+
+## Saffron cod
+
+The AFSC age and growth lab has a fairly low number of samples for saffron cod when compared to other sources (AFSC: $n=55$; Helser et al. 2017: $n=1304$; Walker 2017: $n=166$; Harvey 2000: $n=46$; Frost & Lowry 1981: n=146).  However, since we do have raw data in hand, it might be good to check the Helser et al. regression to see if we're getting the same weird mismatch that we had with Arctic cod.
+
+```{r SCplot}
+SC_data <- Data[which(Data$common_name=="Saffron cod"),]
+SC_lm = lm(fish_length~length,data=SC_data)
+
+SC_OL_to_FL_afsc <- function(OL){-4.027+16.823*OL}
+SC_OL_to_FL_helser <- function(OL){(OL - 1.345)/0.047}
+
+plot(SC_data$length,SC_data$fish_length)
+lengths = c(0:11)
+lines(lengths,SC_OL_to_FL_afsc(lengths))
+lines(lengths,SC_OL_to_FL_helser(lengths),col='blue')
+
+```
+Here the black dots and regression line represent best fits to our small dataset, whereas the Helser et al. regression is in blue.  These look a bit different, but in actuality there appears to be a decent amount of variation in fish lengths as a function of otolith lengths; all fish appear to be fairly small as well, so there probably won't be much sensitivity in energy requirements calculations to which one we choose.  Ultimately it may just make sense to go with the Helser et al. estimates here since sample sizes are so large.  It's encouraging that the Helser et al. regression appears to do well here.  It may be worth going back to see if there is a typo in their regression equation for Arctic cod.
+
+```{r setHelser}
+SC_OL_to_FL <- SC_OL_to_FL_helser
+```
+
+## Sand lance
+
+For Pacific sand lance (Ammodytes personatus) there are two sources in the literature with published otolith length regressions: Matta and Baker (2020) and Harvey (2000).  The former study has a higher sample size ($n=120$ vs. $n=10$); neither study appears to be from the same geographical area that we're interested in, with the Matta and Baker (2020) study consisting of fish from the San Juan Islands (Washington state), and the Harvey study using samples from Oregon, Washington, and Alaska.  I'm a little confused as to whether we're actually including Pacific sand lance in our list of 9 species (this would increase the list to 10), but if we are we could set our OL to FL function as
+
+```{r pacSandLance}
+PSL_OL_to_FL <- function(OL) 0.55+49.94*OL 
+```
+
+For Arctic sand lance, there are two regressions reported in the literature: Munk 2012 ($n=113$) and Walker 2017 ($n=96$), both using samples from Alaska.  I would suggest simply going with the Munk etimates since sample size is higher and the measurements are for fork length instead of total length which is what we've been using so far for otolith coversions.
+
+```{r arcSandLance}
+ASL_OL_to_FL <- function(OL) (OL-.1147)/.0153 
+```
+
+## Pacific capelin
+
+There are only two studies for Pacific capelin: Walker 2017 and Harvey 2000.  Both had low sample sizes ($n=67$ and $n=39$, respectively), with the former representing fish in the Chukchi and Beaufort seas, and the latter representing fish in the Bering Sea. Owing to higher sample sizes and more recent data, it may make sense to go with the Walker 2017 estimates.  Note that this conversion is from otolith length to fish total length.
+
+```{r capelin}
+Cap_OL_to_TL <- function(OL) 61.46*OL+38.28
+```
+
+## Rainbow smelt
+
+Only one study is available for rainbow smelt, and it is based on small sample sizes and older data (Harvey 2000).  However, it does represent collections from the Bering Sea.  Making an adjust from standard length in cm to standard length in mm, we have
+
+```{r smelt}
+RS_OL_to_SL <- function(OL) 3.2 + 26.9*OL
+```
+
+
+## Pacific herring
+
+Two studies have regressions for Pacific herring: Harvey 2000 ($n=82$) and Munk 2012 ($n=329$).  The former represents collections from Washington and Oregon, while the latter represents collections from Alaska.  Owing to the more recent data, higher sample sizes, and more representative geographic coverage it is a rather easy call to select the Munk 2012 regression.
+
+```{r herring}
+PH_OL_to_FL <- function(OL) (OL-0.6942)/0.0143
+```
+
+## Relationship export
+
+Let's save these function and export them to an R data file for our
+subsequent fish consumption analysis.
+
+```{r export}
+save(AC_OL_to_FL,PC_OL_to_FL,WP_OL_to_FL,YS_OL_to_FL,SC_OL_to_FL,PSL_OL_to_FL,ASL_OL_to_FL,Cap_OL_to_TL,RS_OL_to_SL,PH_OL_to_FL,file="otolith_regressions.RData")
+```

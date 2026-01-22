@@ -1,0 +1,320 @@
+---
+title: "Supplement 5: Spotted seal mass-at-age"
+author: "Paul Conn"
+date: '2023-06-08'
+bibliography: references.bib
+output:pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Summary
+
+This supplement documents our approach for modeling mass-at-age for wild spotted seals in the Bering and Chukchi Seas in the manuscript  "Trophic Roles of Spotted Seals in the Bering and Chukchi Seas" by Boveng et al.  
+
+After reviewing weight-at-age and length-at-age data from live captures and historical records, we fit several implementations of von Bertalanffy growth curves to mass-at-age data, ultimately deciding on an approach that makes use of both live-capture data as well as historical reports of mass-at-age for sexually mature seals [@Fedoseev2000].
+
+## Spotted seal weight-at-age and length-at-age data
+
+Spotted seal weight-at-age (kg) and length-at-age (cm) data have been collected during live sampling events during capture operations by the Alaska Department of Fish and Game (ADFG)
+and by the NOAA Alaska Fisheries Science Center (AFSC).  Raw data are available
+in "Spotted seal live capture measurements.csv."  Age (in months) is determined using approximate birth dates for young-of-year, and using claw ages for some older individuals.
+Let's bring these data in.
+
+```{r import}
+Table = read.csv("./Data/Spotted seal live capture measurements.csv")
+Table_ages = Table[-which(is.na(Table$MonthAge)),]
+Table_no_ages = Table[which(is.na(Table$MonthAge)),]
+```
+
+There are considerably more records that have age-categories (e.g., subadult, adult) than have numerical claw ages.  In particular, `r sum(is.na(Table$MonthAge))` records don't have a numerical age assigned, while `r sum(!is.na(Table$MonthAge))` do have a numerical age assigned.
+
+In addition, Fedoseev [@Fedoseev2000] reports summaries (averages, SEs) of spotted seal measurements in Karaginsky Bay and the Gulf of Anadyr (Tables 36 and 37) in the Bering Sea, as well as several other regions such as the Sea of Okhotsk and Sea of Japan.  Fedoseev [@Fedoseev2000] summaries are higher resolution for length-at-age than they are for mass-at-age; sex-specific length-at-age summaries were reported for age categories 0,1,2,3,4,5,6,7,8-10, and 11-35, while sex-specific mass values are only summarized from "mature" (presumably sexually mature) seals.
+
+Let's take a look at what these data look like, starting with ADFG/NOAA mass-at-age
+
+
+```{r plot-AK-mass}
+library(ggplot2)
+ggplot(Table_ages)+geom_point(aes(x=MonthAge,y=final_mass_kg,colour=sex))+
+  xlab("Age (months)") + ylab("Mass (kg)")
+```
+
+We can see a few immediate things: first, the maximum age available is 76 months, which
+is considerably less than their maximum age (perhaps 420 months).  Second, we aren't necessarily seeing a clear delineation between males and females at older ages which becomes evident for sexually mature males and females (Fedoseev 2000).  For instance, Fedoseev (2000) reports average body weight in the Gulf of Anadyr and Karaginsky Bay as 86.2 (SE 1.7) and 97.4 (2.1) kg for males and 66.3 (2.8) and 82.9 (1.7) kg for females, respectively. By comparison, the NOAA/ADFG records for "Adults" that are missing ages averaged `r mean(Table_no_ages[which(Table_no_ages$age_class=="Adult" & Table_no_ages$sex=="Male"),"final_mass_kg"])` and `r mean(Table_no_ages[which(Table_no_ages$age_class=="Adult" & Table_no_ages$sex=="Female"),"final_mass_kg"])` kg, respectively.
+
+Let's also take a look at live capture length-at-age data, plotted against Fedoseev's (2000) length-at-age ranges.
+
+```{r plot-length,message=FALSE, warning=FALSE}
+Fedoseev_df = data.frame("MonthAge"=rep(c(0,12,12,24,24,36,36,48,48,60,60,72,72,84,84,96,96,120,120,180),2), "std_length_cm"=c(rep(c(103,123,132,140,146,156,165,166,168,174),each=2),                            rep(c(102,121,131,137,143,155,159,159,160,166),each=2)),
+                "sex" = c(rep("Male",20),rep("Female",20)),
+                "group" = rep(c(1:20),each=2))
+
+ggplot()+geom_point(data=Table_ages,aes(x=MonthAge,y=std_length_cm,colour=sex))+
+  geom_line(data=Fedoseev_df,aes(x=MonthAge,y=std_length_cm,colour=sex,group=group))+
+  xlab("Age (months)") + ylab("Length (cm)")
+```
+
+Here, the points show Alaska live capture data, while the horizontal lines provide
+estimates of age categories from Fedoseev. So, if we trust claw ages for older animals, it would appear that the Alaska-caught
+spotted seals grow slower than they did historically in Russian waters.
+
+Let's also take a look at length vs. mass from Alaskan live capture data.  We'll use a base-10 log transformation
+of both
+
+```{r plot-length-mass}
+Table_lm = Table[-which(is.na(Table$final_mass_kg)),]
+plot(log10(Table_lm[,"std_length_cm"]),log10(Table_lm[,"final_mass_kg"]),xlab=("Length (log10 cm)"),ylab="Mass (log10 kg)")
+```
+It looks like we could probably use a linear relationship here if we wanted to work with length-at-age and 
+convert to mass-at-age, which would allow us to use the higher resolution Fedoseev summaries.  However, this relationship is somewhat imprecise and we would also need to assume a conversion between dead length and live length measurements.  For these reasons, we prefer to work with mass-at-age directly.
+
+## Mass-at-age modeling
+
+For the moment, however, let's fit some von Bertalanffy models (see, e.g. [@Quinn1999]) to our mass-at-age data.  We'll use the discrete time versions of this model, defined as
+
+$$
+M(a) = M_\infty (1-\exp(-k(a-t_0)))
+$$
+where $M(a)$ gives mass (kg) at age $a$, $M_\infty$ is an asymptotic mass (mean mass for old seals), $k$ is
+a growth parameter, and $t_0$ is a y-intercept value.
+
+We'll constrain
+the y-intercept parameter for males and females to be the same, but try to estimate sex-specific growth 
+and asymptotic mean mass parameters.
+
+```{r vb1, message=FALSE, warning=FALSE}
+vb_ssq_sex <- function(pars,age,weight,sex){
+  Linf_m = exp(pars[1])
+  Linf_f = exp(pars[2])
+  k_m = exp(pars[3])
+  k_f = exp(pars[4])
+  t0 = pars[5]
+  n = length(age)
+  Pred_weights = rep(0,n)
+  Pred_weights[which(sex=="Male")]=Linf_m * (1-exp(-k_m*(age[which(sex=="Male")]-t0)))
+  Pred_weights[which(sex=="Female")]=Linf_f * (1-exp(-k_f*(age[which(sex=="Female")]-t0)))
+  ssq = sum((Pred_weights-weight)^2)
+  return(ssq)
+}
+
+inits = c(log(100),log(100),log(0.5),log(0.5),0)
+optim_out = nlminb(start=inits,objective=vb_ssq_sex,age=Table_ages[,"MonthAge"],weight=Table_ages[,"final_mass_kg"],sex=Table_ages[,"sex"])
+pars = optim_out$par
+Linf_m = exp(pars[1])
+Linf_f = exp(pars[2])
+k_m = exp(pars[3])
+k_f = exp(pars[4])
+t0 = pars[5]
+Pred_df = data.frame("MonthAge"=rep(c(0:150),2),"sex"=rep(c("Male","Female"),each=151))
+Pred_df$final_mass_kg = 0
+Pred_df$final_mass_kg[1:151]=Linf_m * (1-exp(-k_m*(c(0:150)-t0)))
+Pred_df$final_mass_kg[152:302]=Linf_f * (1-exp(-k_f*(c(0:150)-t0)))
+
+library(ggplot2)
+ggplot()+geom_point(data=Table_ages,aes(x=MonthAge,y=final_mass_kg,colour=sex))+
+   geom_line(data=Pred_df,aes(x=MonthAge,y=final_mass_kg,colour=sex,group=sex))+
+   xlab("Age (months)") + ylab("Mass (kg)")+xlim(c(0,120))
+```
+
+
+There's several problems with this.  First, the male curve is lower than the female curve,
+which doesn't fit our knowledge of dimorphism (adult males are known to be slightly larger on average
+than adult females).  This is likely an artifact of low sample size and only having data from younger
+animals.  Second, the curves keep increasing at older ages when they should be reaching an asymptote.
+This is likely due to extrpolation and not having any data for older ages.
+
+One approach would be to use "Adult" mass-at-age data from NOAA/ADFG, combined with the mass-at-age data reported by Fedoseev [@Fedoseev2000] for mature seals as the $M_\infty$ 
+parameter in the von Bertalanffy growth equation. Let's do this, using an inverse variance-weighting to produce an estimate of mature
+mass-at-age that combines the NOAA/ADFG values with Gulf of Anadyr and Karaginsky Bay values reported in Table 27 of [@Fedoseev2000].
+
+
+
+```{r vb2,message=FALSE, warning=FALSE}
+vb_ssq_sex_fixLinf <- function(pars,Linf_m,Linf_f,age,weight,sex){
+  k_m = exp(pars[1])
+  k_f = exp(pars[2])
+  t0 = pars[3]
+  n = length(age)
+  Pred_weights = rep(0,n)
+  Pred_weights[which(sex=="Male")]=Linf_m * (1-exp(-k_m*(age[which(sex=="Male")]-t0)))
+  Pred_weights[which(sex=="Female")]=Linf_f * (1-exp(-k_f*(age[which(sex=="Female")]-t0)))
+  ssq = sum((Pred_weights-weight)^2)
+  return(ssq)
+}
+
+which_am = which(Table_no_ages$age_class=="Adult" & Table_no_ages$sex=="Male")
+which_af = which(Table_no_ages$age_class=="Adult" & Table_no_ages$sex=="Female")
+mean_m_ak = mean(Table_no_ages[which_am,"final_mass_kg"])
+mean_f_ak = mean(Table_no_ages[which_af,"final_mass_kg"])
+var_m_ak = var(Table_no_ages[which_am,"final_mass_kg"])/length(which_am)
+var_f_ak = var(Table_no_ages[which_af,"final_mass_kg"])/length(which_af)
+var_m_a = 1.7^2
+var_m_k = 2.1^2
+var_f_a = 2.8^2
+var_f_k = 1.7^2
+Linf_m = (1/var_m_ak * mean_m_ak + 1/var_m_a * 86.2 + 1/var_m_k * 97.4)/(1/var_m_ak + 1/var_m_a + 1/var_m_k)
+Linf_f = (1/var_f_ak * mean_f_ak +1/var_f_a * 66.3 + 1/var_f_k * 82.9)/(1/var_f_ak + 1/var_f_a + 1/var_f_k)
+
+inits = c(log(0.5),log(0.5),0)
+optim_out = nlminb(start=inits,objective=vb_ssq_sex_fixLinf,Linf_m=Linf_m,Linf_f=Linf_f,age=Table_ages[,"MonthAge"],weight=Table_ages[,"final_mass_kg"],sex=Table_ages[,"sex"])
+pars = optim_out$par
+k_m = exp(pars[1])
+k_f = exp(pars[2])
+t0 = pars[3]
+Pred_df = data.frame("MonthAge"=rep(c(0:150),2),"sex"=rep(c("Male","Female"),each=151))
+Pred_df$final_mass_kg = 0
+Pred_df$final_mass_kg[1:151]=Linf_m * (1-exp(-k_m*(c(0:150)-t0)))
+Pred_df$final_mass_kg[152:302]=Linf_f * (1-exp(-k_f*(c(0:150)-t0)))
+
+library(ggplot2)
+ggplot()+geom_point(data=Table_ages,aes(x=MonthAge,y=final_mass_kg,colour=sex))+
+   geom_line(data=Pred_df,aes(x=MonthAge,y=final_mass_kg,colour=sex,group=sex))+
+   xlab("Age (months)") + ylab("Mass (kg)")+xlim(c(0,120))
+```
+
+
+Using the inverse weighting procedure, the asymptotic mean mass-at-age values are 
+`r Linf_m` for males and `r Linf_f` for females, and produce the above growth curves.
+
+However, one thing to note is that the mass-at-age values for adult seals
+likely include seals that are not fully grown.  
+Looking at the data this way, it is likely that these $L_\infty$ values (mass asymptotes) are too low.  As another
+approach, we investigate the possibility of treating the inverse-variance weighted mature mass-at-age values as data within an alternative estimation scheme.  In this case, we use stable age distribution estimates from Conn and Trukhanova [@ConnTrukhanova2023] to calculate what mature mass-at-age should be given a particular set of von Bertalanffy growth parameters.  In this manner, we can estimate $L_\infty$ values that are compatible with observed adult mass-at-age values.  When adapting our sum-of-squares objective function, we'll give the sex-specific, variance-weighted mature-mass-at-age means the same effective sample size as the live-capture mass-at-claw-age dataset.  Specifically, let's reformulate our estimation model as follows:
+
+
+```{r vb3,message=FALSE, warning=FALSE}
+vb_ssq_sex_estLinf <- function(pars,age,weight,sex,mature_mass_m,mature_mass_f,Stable_age,maturity){
+  k_m = exp(pars[1])
+  k_f = exp(pars[2])
+  Linf_m = exp(pars[4])
+  Linf_f = exp(pars[5])
+  t0 = pars[3]
+  n = length(age)
+  Pred_weights = rep(0,n)
+  Pred_weights[which(sex=="Male")]=Linf_m * (1-exp(-k_m*(age[which(sex=="Male")]-t0)))
+  Pred_weights[which(sex=="Female")]=Linf_f * (1-exp(-k_f*(age[which(sex=="Female")]-t0)))
+  ssq = sum((Pred_weights-weight)^2)
+  
+  #mature animals component
+  Ages = c(0:39)*12
+  Pred_weights_m = Linf_m * (1-exp(-k_m*(Ages-t0)))
+  Pred_weights_f = Linf_f * (1-exp(-k_f*(Ages-t0)))
+  Weights = Stable_age * maturity
+  Weights = Weights/sum(Weights)
+  pred_wt_m = sum(Weights * Pred_weights_m)
+  pred_wt_f = sum(Weights * Pred_weights_f)
+  
+  ssq = ssq + n/2*(mature_mass_m-pred_wt_m)^2
+  ssq = ssq + n/2*(mature_mass_f-pred_wt_f)^2
+  
+  return(ssq)
+}
+
+mature_mass_m = Linf_m
+mature_mass_f = Linf_f
+load('./Data/Stable_stage_matrix.RData')
+maturity = rep(1,40)
+maturity[1:3] = 0  #ages 0-2 are always sexually immature
+maturity[4] = 0.333  #1/3 of age 3 seals are sexually mature; seals age 4 and up are all sexually mature
+inits = c(log(0.5),log(0.5),0,log(Linf_m),log(Linf_f))
+optim_out = nlminb(start=inits,objective=vb_ssq_sex_estLinf,age=Table_ages[,"MonthAge"],
+                   weight=Table_ages[,"final_mass_kg"],sex=Table_ages[,"sex"],mature_mass_m=mature_mass_m,
+                   mature_mass_f = mature_mass_f, Stable_age = Stable[4,], maturity=maturity)
+pars = optim_out$par
+k_m = exp(pars[1])
+k_f = exp(pars[2])
+t0 = pars[3]
+Linf_m = exp(pars[4])
+Linf_f = exp(pars[5])
+Pred_df = data.frame("MonthAge"=rep(c(0:150),2),"sex"=rep(c("Male","Female"),each=151))
+Pred_df$final_mass_kg = 0
+Pred_df$final_mass_kg[1:151]=Linf_m * (1-exp(-k_m*(c(0:150)-t0)))
+Pred_df$final_mass_kg[152:302]=Linf_f * (1-exp(-k_f*(c(0:150)-t0)))
+
+library(ggplot2)
+ggplot()+geom_point(data=Table_ages,aes(x=MonthAge,y=final_mass_kg,colour=sex))+
+   geom_line(data=Pred_df,aes(x=MonthAge,y=final_mass_kg,colour=sex,group=sex))+
+   xlab("Age (months)") + ylab("Mass (kg)")+xlim(c(0,120))
+```
+
+
+Now, the $M_\infty$ values are
+`r exp(pars[4])` for males and `r exp(pars[5])` for females, respectively - slightly higher than we had before.
+I suggest we use these parameter values to establish total energy requiremnts in the larger fish consumption analysis.
+
+In order to generate predictions of mass-at-age that propagate uncertainty in the mass-at-age relationship, we will `flip the switch' and generate posterior predictions by conducting a Bayesian analysis of this model.  However, we can no longer rely on a sum-of-squares objective function.  Instead, we'll assume  a Gaussian error structure, and we'll condition on these new asymptotic mass values.
+
+```{r jags}
+jags.mod <- function(){
+  for(im in 1:n_m){
+    Pred_weights_m[im] <- Linf_m * (1-exp(-k_m*(age_m[im]-t0)))
+    Weights_m[im]~dnorm(Pred_weights_m[im],tau)
+  }
+  for(i in 1:n_f){
+    Pred_weights_f[i] <- Linf_f * (1-exp(-k_f*(age_f[i]-t0)))
+    Weights_f[i]~dnorm(Pred_weights_f[i],tau)
+  }
+  
+  k_m ~ dunif(0,1)
+  k_f ~ dunif(0,1)
+  t0 ~ dnorm(0,.01)
+  tau ~ dgamma(0.1,0.1)
+}
+
+jags_data=list()
+jags_data[["Weights_m"]] = Table_ages[which(Table_ages$sex=="Male"),"final_mass_kg"]
+jags_data[["Weights_f"]] = Table_ages[which(Table_ages$sex=="Female"),"final_mass_kg"]
+jags_data[["age_m"]]=Table_ages[which(Table_ages$sex=="Male"),"MonthAge"]
+jags_data[["age_f"]]=Table_ages[which(Table_ages$sex=="Female"),"MonthAge"]
+jags_data[["n_m"]] = length(jags_data[["Weights_m"]])
+jags_data[["n_f"]] = length(jags_data[["Weights_f"]])
+jags_data[["Linf_m"]] = Linf_m
+jags_data[["Linf_f"]] = Linf_f
+
+jags_params = c("k_m","k_f","t0")
+
+jags_inits <- function(){
+  list("k_m"=runif(1,0,1),"k_f"=runif(1,0,1),"t0"=runif(1,-20,20),"tau"=runif(1,1,3))
+}
+
+library(R2jags)
+set.seed(2020)
+
+jags_fit <- jags(data=jags_data,inits=jags_inits,parameters.to.save=jags_params,
+                 n.chains=3,n.iter=12000,n.burnin=2000,model.file=jags.mod,n.thin=1)
+
+```
+Now, let's produce posterior predictions for male and female growth curves, plot
+them, and output them for our integrated analysis.  We'll output predictions
+at the month level so we can account for growth within open water and winter periods.
+
+```{r plot posteriors}
+  Ages = c(0:(12*40-1))
+  Seal_wt_age_f = Seal_wt_age_m <- matrix(0,12*40,10000)
+  for(i in 1:10000){
+    Seal_wt_age_f[,i] = Linf_f * (1-exp(-jags_fit$BUGSoutput$sims.matrix[i,"k_f"]*(Ages-jags_fit$BUGSoutput$sims.matrix[i,"t0"])))
+    Seal_wt_age_m[,i] = Linf_m * (1-exp(-jags_fit$BUGSoutput$sims.matrix[i,"k_m"]*(Ages-jags_fit$BUGSoutput$sims.matrix[i,"t0"])))
+  }
+  
+  quant025 <-function(x) quantile(x,0.025)
+  quant975 <-function(x) quantile(x,0.975)
+  
+  Plot_df = data.frame(Age = c(Ages,Ages),
+     Mean = c(rowMeans(Seal_wt_age_f),rowMeans(Seal_wt_age_m)),
+     Lower = c(apply(Seal_wt_age_f,1,"quant025"),apply(Seal_wt_age_m,1,"quant025")),
+     Upper = c(apply(Seal_wt_age_f,1,"quant975"),apply(Seal_wt_age_m,1,"quant975")),
+     Sex = c(rep("Female",12*40),rep("Male",12*40))
+  )
+  
+  ggplot() + geom_ribbon(data=Plot_df,aes(x=Age,ymin=Lower,ymax=Upper,fill=Sex,group=Sex),alpha=0.6)+
+    xlim(c(0,150)) + xlab('Age (Months)') + ylab("Mass (kg)")
+  
+  Wt_age = list("fem"=Seal_wt_age_f,"male"=Seal_wt_age_m)
+  save(Wt_age,file="./Data/Seal_wt_age.RData")
+
+```
+
+## References 
