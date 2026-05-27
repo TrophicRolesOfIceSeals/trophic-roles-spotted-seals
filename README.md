@@ -47,7 +47,7 @@ final integrated analysis.
 4. [Supplement 3] Run `analyze_stomachs.Rmd` to produce posterior predictions of otolith length and frequency
     found in spotted seal stomach and scat samples.
 
-    **Inputs**: `/data/ADFG_SpottedSeals_OtolithsMeasured20220627.csv`, `/data/PEP_Pl_otolength_allspecies.csv`,
+    **Inputs**: `/data/ADFG_SpottedSeals_OtolithsMeasured20220627.csv`, `/data/AFSC_spottedprey_wotos_meas.csv`,
     `/data/ADFG_SpottedSeals_OtolithsMeasured20230424_PriorityMeasurements.csv`, 
     `/data/ADFG_SpottedSeals_StomachContentsData20220705.csv`
     

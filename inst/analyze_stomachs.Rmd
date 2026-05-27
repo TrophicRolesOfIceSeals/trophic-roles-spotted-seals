@@ -83,8 +83,10 @@ field teams found scat but didn't see the animal).  These are more likely
 to be non-pups than pups, so rather than throw those out, we'll just set those to be adults.  Note that not all of the ADFG fields are going to be filled in, but we'll make sure to fill in all fields required for our analysis.
 
 ```{r, load2}
-  AFSC_data <- read.csv("../data/PEP_Pl_otolength_allspecies.csv")
-  AFSC_data$prey_species[which(AFSC_data$prey_species=="Clupea pallasi")]="Clupea pallasii"  #fix typo / alternate spelling
+  AFSC_data <- read.csv("../data/AFSC_spottedprey_wotos_meas.csv")
+  AFSC_data$Month = as.numeric(substr(AFSC_data$capture_dt,6,7))
+  AFSC_data$prey_species[which(AFSC_data$prey_species=="Clupea pallasi")]="Clupea pallasii"  
+  AFSC_data$prey_species[which(AFSC_data$prey_species=="Mallotus catervarius (=villosus)")]="Mallotus villosus"  
   AFSC_data$Season = "Winter"
   AFSC_data$Season[which(AFSC_data$Month>4)]="Summer"
   #change species to common name, and those not in our target list to "other"
@@ -93,7 +95,9 @@ to be non-pups than pups, so rather than throw those out, we'll just set those t
     Which_isp = which(AFSC_data$prey_species==Species_to_common[isp,1])
     if(length(Which_isp)>0)AFSC_data$prey_species[Which_isp]=Species_to_common[isp,2]
   }
-  AFSC_data$SealAgeClass[which(AFSC_data$SealAgeClass=="Unknown")]="NonPup"
+  AFSC_data$age_class[which(AFSC_data$age_class %in% c("Subadult","Unknown","Adult"))]="NonPup"
+  AFSC_data$age_class[which(AFSC_data$age_class=="Young of year")]="Pup"
+  
 
   #calculate %FO by species
   Unique_spenos = unique(AFSC_data$speno)
@@ -114,15 +118,16 @@ to be non-pups than pups, so rather than throw those out, we'll just set those t
   print(FO_df)
   
   #create otolith length data set in same format as ADFG & merge
-  Otolith_AFSC = AFSC_data[which(AFSC_data$prey_species %in% Species_to_common[,2]),]
+  Otolith_AFSC = AFSC_data[which((AFSC_data$prey_species %in% Species_to_common[,2]) & 
+                                   (is.na(AFSC_data$bone_measure_mm)==FALSE)),]
   Dummy_df = as.data.frame(lapply(Ot_len_df[1,], rep,nrow(Otolith_AFSC)))
   Dummy_df$Location = "AFSC"
   Dummy_df$Measured.by = "AFSC"
   Dummy_df$SealSEX="NA"
   Dummy_df$MonthNumb = Otolith_AFSC$Month
   Dummy_df$SPEC_NUM = Otolith_AFSC$speno
-  Dummy_df$SealAgeClass=Otolith_AFSC$SealAgeClass
-  Dummy_df$OtolithLength=Otolith_AFSC$oto_length_mm
+  Dummy_df$SealAgeClass=Otolith_AFSC$age_class
+  Dummy_df$OtolithLength=Otolith_AFSC$bone_measure_mm
   Dummy_df$Season = Otolith_AFSC$Season
   Dummy_df$FishSpecies = Otolith_AFSC$prey_species
   Ot_len_df = rbind(Ot_len_df,Dummy_df)
@@ -138,11 +143,10 @@ to be non-pups than pups, so rather than throw those out, we'll just set those t
     Cur_data = AFSC_data[which(AFSC_data$speno==Unique_spenos[iseal]),]
     Cur_data$prey_species=factor(Cur_data$prey_species,levels=Sp_names)
     Dummy_df[iseal,"SPEC_NUM"]=Cur_data$speno[1]
-    Dummy_df[iseal,"SealAgeClass"]=Cur_data$SealAgeClass[1]
+    Dummy_df[iseal,"SealAgeClass"]=Cur_data$age_class[1]
     Dummy_df[iseal,"Region"]="Bering"
     Dummy_df[iseal,"MonthNumb"]=Cur_data$Month[1]
     Dummy_df[iseal,"Season"]=Cur_data$Season[1]
-    Dummy_df[iseal,"SealAgeClass"]=Cur_data$SealAgeClass[1]
     Dummy_df[iseal,12:21]=summary(Cur_data$prey_species)
   }
   colnames(Dummy_df)=colnames(Stomachs_df)
