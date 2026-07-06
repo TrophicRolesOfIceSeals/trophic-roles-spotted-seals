@@ -106,7 +106,6 @@ modgam <- gam(formula = intakems ~
                          seal +
                          yearNum +
                          sex +
-                         facility +
                          ageClass*season*sex +
                          ageClass*cos(monthNum*2*pi/12)*sex + ageClass*sex*sin(monthNum*2*pi/12) +
                          s(seal, bs = "re") +
@@ -144,8 +143,7 @@ plot(bestmod)
 
 talpha <- qt(0.975,df=bestmod$df.null)
 
-# only include ASLC facility
-new_data <- tidyr::expand(intake, sex, ageClass, facility="ASLC",monthNum, yearNum,pi=pi)
+new_data <- tidyr::expand(intake, sex, ageClass, monthNum, yearNum,pi=pi)
 
 m_pred <- bind_cols(new_data,
                       as.data.frame(predict(bestmod, newdata = new_data, se.fit = TRUE, type="response")))
@@ -180,15 +178,14 @@ paste0(paste0(termCodes,"=",names(termCodes)),collapse=", ")
 #masum$coefmat.subset (model-averaged coefficients)
 #confint(ma) (model-averaged confidence intervals)
 
-# best supported model with ageClass, season, facility, random individual-level, and year effects
+# best supported model with ageClass, season, random individual-level, and year effects
 bestmodred <- get.models(allcombs,subset=is.na(sex) & is.na(seal))[[1]]
 summary(bestmodred)
 plot(bestmodred)
 
 talphared <- qt(0.975,df=bestmodred$df.null)
 
-# only include ASLC facility as it's closer to range of free-living spotted seals
-new_datared <- tidyr::expand(intake, ageClass, facility="ASLC",yearNum,monthNum,seal,pi=pi)
+new_datared <- tidyr::expand(intake, ageClass, yearNum,monthNum,seal,pi=pi)
 
 # effects to exclude
 exclude <- c("s(seal)","s(yearNum)")
@@ -205,7 +202,7 @@ mred_pred$month <- month(mred_pred$monthNum+1,label=TRUE)
 mred_pred$lci <- mred_pred$fit-talphared*mred_pred$se.fit
 mred_pred$uci <- mred_pred$fit+talphared*mred_pred$se.fit
 
-mred_pred %>% select(-seal,-yearNum,-facility)
+mred_pred %>% select(-seal,-yearNum)
 
 ggplot(mred_pred, aes(x = monthNum, y = fit,  colour = ageClass)) +
   scale_x_continuous(
@@ -219,7 +216,7 @@ ggplot(mred_pred, aes(x = monthNum, y = fit,  colour = ageClass)) +
   scale_color_manual(values = c("blue","orange","red"))
 
 mred_pred_table = as.data.frame(mred_pred)
-mred_pred_table = mred_pred_table[,-which(colnames(mred_pred) %in% c("facility","yearNum","seal"))]
+mred_pred_table = mred_pred_table[,-which(colnames(mred_pred) %in% c("yearNum","seal"))]
 write.csv(mred_pred_table,file="kcal_per_kg_preds.csv")
 
 mred_predlog <- bind_cols(new_datared,
@@ -234,7 +231,7 @@ mred_predlog$month <- month(mred_predlog$monthNum+1,label=TRUE)
 mred_predlog$lci <- mred_predlog$fit-talphared*mred_predlog$se.fit
 mred_predlog$uci <- mred_predlog$fit+talphared*mred_predlog$se.fit
 
-mred_predlog %>% select(-seal,-yearNum,-facility)
+mred_predlog %>% select(-seal,-yearNum)
 
 ggplot(mred_predlog, aes(x = monthNum, y = fit,  colour = ageClass)) +
   scale_x_continuous(
@@ -252,7 +249,7 @@ ggplot(mred_predlog, aes(x = monthNum, y = fit,  colour = ageClass)) +
 We'll now attempt to generate posterior predictions for energy intake that account for correlation between parameter estimates by (1) using the gam.predict function to generate design matrices specific to different combinations of covariates, and (2) simulating gam parameters from a multivariate normal distribution.  This can be viewed as an empirical Bayes posterior predictive procedure.
 
 ```{r preds}
-# limit prediction combinations to those omitting seal and year, and restricting to ASLC facility
+# limit prediction combinations to those omitting seal and year
 
 data_pred <- new_datared
 data_pred <- data_pred %>% filter(seal==seal[1],yearNum==yearNum[1]) %>% arrange(ageClass)
