@@ -29,9 +29,14 @@ identifiers:
     description: "The concept DOI for the collection of all versions of this repository on Zenodo."
 preferred-citation:
   type: article
+  title: "Trophic roles of spotted seals in the Bering, Chukchi, and Beaufort Seas"
+  journal: "Submitted to Marine Ecology Progress Series"
+  year: 2026
+  status: submitted
+  notes: "Manuscript in preparation / submitted for publication."
   authors:
-    - family-names: Boveng
-      given-names: Peter L.
+    - family-names: "Boveng"
+      given-names: "Peter L."
       orcid: "https://orcid.org/0000-0003-2732-4833"
       affiliation: "Marine Mammal Laboratory, Alaska Fisheries Science Center, National Marine Fisheries Service, National Oceanic and Atmospheric Administration (Retired)"
       email: "peter.boveng@gmail.com"
@@ -81,7 +86,3 @@ preferred-citation:
       given-names: "Heather L."
       orcid: "https://orcid.org/0000-0001-7068-4418"
       affiliation: "Marine Mammal Laboratory, Alaska Fisheries Science Center, National Marine Fisheries Service, National Oceanic and Atmospheric Administration"
-  title: "Trophic roles of spotted seals in the Bering, Chukchi, and Beaufort Seas"
-  journal: "Submitted to Marine Ecology Progress Series"
-  year: 2026
-  note: "Manuscript in preparation / submitted for publication."
