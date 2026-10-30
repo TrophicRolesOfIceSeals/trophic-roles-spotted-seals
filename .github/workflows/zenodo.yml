@@ -4,6 +4,14 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Tag of the published release to deploy
+        required: true
+        type: string
+
+permissions:
+  contents: read
 
 jobs:
   deploy:
@@ -11,8 +19,61 @@ jobs:
 
     steps:
     - uses: actions/checkout@v7
+      with:
+        ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.event.release.tag_name }}
+
     - name: Run Zenodo Deploy
+      if: github.event_name == 'release'
       uses: nmfs-opensci/zenodo-gha@main
       with:
         token: ${{ secrets.ZENODO_TOKEN }}
-        zenodo_json: CITATION.cff   # either a .zenodo.json file or CITATION.cff
+        zenodo_json: CITATION.cff
+
+    - name: Get published release archive and metadata
+      if: github.event_name == 'workflow_dispatch'
+      id: release
+      env:
+        GH_TOKEN: ${{ github.token }}
+        RELEASE_TAG: ${{ inputs.release_tag }}
+      run: |
+        release=$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}")
+        tag=$(jq -er '.tag_name | select(length > 0)' <<< "$release")
+        archive_url=$(jq -er '.zipball_url | select(length > 0)' <<< "$release")
+        html_url=$(jq -er '.html_url | select(length > 0)' <<< "$release")
+        release_name=$(jq -r '.name // .tag_name' <<< "$release")
+        release_body=$(jq -r '.body // ""' <<< "$release")
+
+        curl --fail --location --retry 3 --silent --show-error \
+          --header "Authorization: Bearer ${GH_TOKEN}" \
+          --header "Accept: application/vnd.github+json" \
+          "$archive_url" --output zenodo-release.zip
+
+        printf '## Release Name: %s\n' "$release_name" > body.txt
+        printf '%s\n' "$release_body" >> body.txt
+        printf 'version=%s\nhtml_url=%s\n' "$tag" "$html_url" >> "$GITHUB_OUTPUT"
+
+    - name: Check out Zenodo deployment script
+      if: github.event_name == 'workflow_dispatch'
+      uses: actions/checkout@v7
+      with:
+        repository: nmfs-opensci/zenodo-gha
+        ref: main
+        path: .github/zenodo-gha
+
+    - name: Convert citation metadata and install deployment dependencies
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        pip install --user cffconvert markdown requests
+        cffconvert -f zenodo > zenodo.json
+
+    - name: Deploy published release to Zenodo
+      if: github.event_name == 'workflow_dispatch'
+      env:
+        VERSION: ${{ steps.release.outputs.version }}
+        HTML_URL: ${{ steps.release.outputs.html_url }}
+        ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
+      run: |
+        python .github/zenodo-gha/scripts/deploy.py upload zenodo-release.zip \
+          --version "$VERSION" \
+          --html-url "$HTML_URL" \
+          --zenodo-json zenodo.json
