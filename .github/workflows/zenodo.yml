@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Leave blank for the first deposit; set to the Zenodo concept DOI afterward.
-      ZENODO_DOI: ""
+      ZENODO_DOI: "10.5281/zenodo.23786679"
 
     steps:
     - uses: actions/checkout@v7
