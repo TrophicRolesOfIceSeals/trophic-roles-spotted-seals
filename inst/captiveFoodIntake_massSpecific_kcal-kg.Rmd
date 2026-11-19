@@ -159,7 +159,7 @@ ggplot(m_pred, aes(x = monthNum, y = fit, ymax=fit+talpha*se.fit,ymin=fit-talpha
   ylab("Mass-specific intake (kcal/kg/day)") + xlab("month") +
   guides(color = guide_legend(title = "year")) +
   geom_ribbon(alpha = 0.15) +
-  scale_color_manual(values = gray.colors(14,start=0,end=0.6))
+  scale_color_manual(values = gray.colors(length(levels(m_pred$yearNum)),start=0,end=0.6))
 
 # model selection and averaging
 options(width = 100)
