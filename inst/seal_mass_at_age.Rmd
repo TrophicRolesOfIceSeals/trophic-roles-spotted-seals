@@ -1,7 +1,7 @@
 ---
-title: "Supplement 5: Spotted seal mass-at-age"
+title: "Spotted seal mass-at-age, revised for seasonal mass fluctuations"
 author: "Paul Conn"
-date: '2023-06-08'
+date: '2026-11-19'
 bibliography: references.bib
 output: pdf_document
 ---
@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This supplement documents our approach for modeling mass-at-age for wild spotted seals in the Bering and Chukchi Seas in the manuscript  "Trophic Roles of Spotted Seals in the Bering and Chukchi Seas" by Boveng et al.  
 
-After reviewing weight-at-age and length-at-age data from live captures and historical records, we fit several implementations of von Bertalanffy growth curves to mass-at-age data, ultimately deciding on an approach that makes use of both live-capture data as well as historical reports of mass-at-age for sexually mature seals [@Fedoseev2000].
+After reviewing weight-at-age and length-at-age data from live captures and historical records, we fit several implementations of von Bertalanffy growth curves to mass-at-age data, ultimately deciding on an approach that makes use of both live-capture data as well as historical reports of mass-at-age for sexually mature seals [@Fedoseev2000].  However, live-capture and historical data were primarily collected in spring months (April-June), when seasonal masses of seals are relatively low.  Further, mass-at-age in captive spotted seals reveals a distinct sinusoidal seasonal pattern where seal masses peak in Jan-Feb, and reach a nadir in June-July.  We thus seek to (1) correct our von Bertalanffy curves for a likely negative bias associated with the month of collection, and (2) introduce a sinosoidal pattern in mass-at-age derived from patterns estimated from captive seals.
 
 ## Spotted seal weight-at-age and length-at-age data
 
@@ -29,9 +29,13 @@ Table_ages = Table[-which(is.na(Table$MonthAge)),]
 Table_no_ages = Table[which(is.na(Table$MonthAge)),]
 ```
 
-There are considerably more records that have age-categories (e.g., subadult, adult) than have numerical claw ages.  In particular, `r sum(is.na(Table$MonthAge))` records don't have a numerical age assigned, while `r sum(!is.na(Table$MonthAge))` do have a numerical age assigned.
+There are quite a few records that are missing fine scale age information.  In particular, `r sum(is.na(Table$MonthAge))` records don't have a numerical age assigned, while `r sum(!is.na(Table$MonthAge))` do have a numerical age assigned.  We can also see that most records are from April, with a smattering of records between May and November.
 
-In addition, Fedoseev [@Fedoseev2000] reports summaries (averages, SEs) of spotted seal measurements in Karaginsky Bay and the Gulf of Anadyr (Tables 36 and 37) in the Bering Sea, as well as several other regions such as the Sea of Okhotsk and Sea of Japan.  Fedoseev [@Fedoseev2000] summaries are higher resolution for length-at-age than they are for mass-at-age; sex-specific length-at-age summaries were reported for age categories 0,1,2,3,4,5,6,7,8-10, and 11-35, while sex-specific mass values are only summarized from "mature" (presumably sexually mature) seals.
+```{r month}
+ hist(Table_ages$month)
+```
+
+In addition, Fedoseev [@Fedoseev2000] reports summaries (averages, SEs) of harvested spotted seal measurements in Karaginsky Bay and the Gulf of Anadyr (Tables 36 and 37) in the Bering Sea, as well as several other regions such as the Sea of Okhotsk and Sea of Japan.  Fedoseev [@Fedoseev2000] summaries are higher resolution for length-at-age than they are for mass-at-age; sex-specific length-at-age summaries were reported for age categories 0,1,2,3,4,5,6,7,8-10, and 11-35, while sex-specific mass values are only summarized from "mature" (presumably sexually mature) seals.  There are no definitive dates of Russian harvest collections, although Fedoseev [@Fedoseev2000] reports that sealing largely occurred in April-May in Karaginsky Bay and May-June in the Gulf of Anadyr.
 
 Let's take a look at what these data look like, starting with ADFG/NOAA mass-at-age
 
@@ -68,12 +72,12 @@ of both
 Table_lm = Table[-which(is.na(Table$final_mass_kg)),]
 plot(log10(Table_lm[,"std_length_cm"]),log10(Table_lm[,"final_mass_kg"]),xlab=("Length (log10 cm)"),ylab="Mass (log10 kg)")
 ```
-It looks like we could probably use a linear relationship here if we wanted to work with length-at-age and 
+It looks like we *might* be able to use a linear relationship here if we wanted to work with length-at-age and 
 convert to mass-at-age, which would allow us to use the higher resolution Fedoseev summaries.  However, this relationship is somewhat imprecise and we would also need to assume a conversion between dead length and live length measurements.  For these reasons, we prefer to work with mass-at-age directly.
 
 ## Mass-at-age modeling
 
-For the moment, however, let's fit some von Bertalanffy models (see, e.g. [@Quinn1999]) to our mass-at-age data.  We'll use the discrete time versions of this model, defined as
+Let's start by fitting some von Bertalanffy models (see, e.g. [@Quinn1999]) to our mass-at-age data.  We'll use the discrete time versions of this model, defined as
 
 $$
 M(a) = M_\infty (1-\exp(-k(a-t_0)))
@@ -124,7 +128,7 @@ There's several problems with this.  First, the male curve is lower than the fem
 which doesn't fit our knowledge of dimorphism (adult males are known to be slightly larger on average
 than adult females).  This is likely an artifact of low sample size and only having data from younger
 animals.  Second, the curves keep increasing at older ages when they should be reaching an asymptote.
-This is likely due to extrpolation and not having any data for older ages.
+This is likely due to extrapolation and not having any data for older ages.
 
 One approach would be to use "Adult" mass-at-age data from NOAA/ADFG, combined with the mass-at-age data reported by Fedoseev [@Fedoseev2000] for mature seals as the $M_\infty$ 
 parameter in the von Bertalanffy growth equation. Let's do this, using an inverse variance-weighting to produce an estimate of mature
@@ -179,10 +183,10 @@ ggplot()+geom_point(data=Table_ages,aes(x=MonthAge,y=final_mass_kg,colour=sex))+
 Using the inverse weighting procedure, the asymptotic mean mass-at-age values are 
 `r Linf_m` for males and `r Linf_f` for females, and produce the above growth curves.
 
-However, one thing to note is that the mass-at-age values for adult seals
-likely include seals that are not fully grown.  
+However, one thing to note is that the mass-at-age values for adult seals reported by Fedoseev
+likely include seals that are not fully grown; that is, they likely include seals that have reached sexual maturity but not their maximum lifetime size.  
 Looking at the data this way, it is likely that these $L_\infty$ values (mass asymptotes) are too low.  As another
-approach, we investigate the possibility of treating the inverse-variance weighted mature mass-at-age values as data within an alternative estimation scheme.  In this case, we use stable age distribution estimates from Conn and Trukhanova [@ConnTrukhanova2023] to calculate what mature mass-at-age should be given a particular set of von Bertalanffy growth parameters.  In this manner, we can estimate $L_\infty$ values that are compatible with observed adult mass-at-age values.  When adapting our sum-of-squares objective function, we'll give the sex-specific, variance-weighted mature-mass-at-age means the same effective sample size as the live-capture mass-at-claw-age dataset.  Specifically, let's reformulate our estimation model as follows:
+approach, we investigate the possibility of treating the inverse-variance weighted mature mass-at-age values (from Fedoseev) as data within an alternative estimation scheme.  In this case, we use stable age distribution estimates from Conn and Trukhanova [@ConnTrukhanova2023] to calculate what mature mass-at-age should be given a particular set of von Bertalanffy growth parameters.  In this manner, we can *estimate* (rather than set) $L_\infty$ values that are compatible with observed adult mass-at-age values.  When adapting our sum-of-squares objective function, we'll give the sex-specific, variance-weighted mature-mass-at-age means the same effective sample size as the live-capture mass-at-claw-age dataset, so that our model equally weights NOAA/ADFG data with values reported by Fedoseev.  Specifically, let's reformulate our estimation model as follows:
 
 
 ```{r vb3,message=FALSE, warning=FALSE}
@@ -243,7 +247,6 @@ ggplot()+geom_point(data=Table_ages,aes(x=MonthAge,y=final_mass_kg,colour=sex))+
 
 Now, the $M_\infty$ values are
 `r exp(pars[4])` for males and `r exp(pars[5])` for females, respectively - slightly higher than we had before.
-I suggest we use these parameter values to establish total energy requiremnts in the larger fish consumption analysis.
 
 In order to generate predictions of mass-at-age that propagate uncertainty in the mass-at-age relationship, we will `flip the switch' and generate posterior predictions by conducting a Bayesian analysis of this model.  However, we can no longer rely on a sum-of-squares objective function.  Instead, we'll assume  a Gaussian error structure, and we'll condition on these new asymptotic mass values.
 
@@ -287,9 +290,8 @@ jags_fit <- jags(data=jags_data,inits=jags_inits,parameters.to.save=jags_params,
                  n.chains=3,n.iter=12000,n.burnin=2000,model.file=jags.mod,n.thin=1)
 
 ```
-Now, let's produce posterior predictions for male and female growth curves, plot
-them, and output them for our integrated analysis.  We'll output predictions
-at the month level so we can account for growth within open water and winter periods.
+Now, let's produce posterior predictions for male and female growth curves and plot
+them.   
 
 ```{r plot posteriors}
   Ages = c(0:(12*40-1))
@@ -316,5 +318,200 @@ at the month level so we can account for growth within open water and winter per
   save(Wt_age,file="../Data/Seal_wt_age.RData")
 
 ```
+
+## Accounting for bias and seasonal effects
+
+One issue we haven't contended with yet is seasonal variation in seal mass. Ice-associated seals put on blubber heading into winter, and decrease mass in summer.  Seasonal trends in blubber are evident from the ADF&G harvest biomonitoring program (L. Quakenbush, unpublished data), and also from examining measured masses in captive spotted seals.  Let's bring in age-at-mass data from captive seals and plot it. We'll also 
+
+```{r plot-captive}
+Captive_data = read.csv("../Data/PHOCAS_spotted_seal_diet.csv")
+data_lm <- data.frame("age_months"=Captive_data[,"Age..months."],"mass"=Captive_data[,"Mean.Body.Mass..kg."])
+data_lm$month = substr(Captive_data$Month.Year,1,3)
+data_lm$spring = data_lm$month %in% c("Apr","May","Jun")
+
+plot(data_lm$age_months,data_lm$mass,col=data_lm$spring+2)
+```
+Here, I've plotted observations in spring (April-June) in green, and the remaining months in red.  On the whole, spring mass observations will tend to be a little lower than for the rest of the year.  Let's fit a von Bertalanffy model for spring-only vs. all points.
+
+```{r vb-captive}
+vb_ssq <- function(pars,age,weight){
+  Linf=exp(pars[1])
+  k = exp(pars[2])
+  t0 = pars[3]
+  n = length(age)
+  Pred_weights = Linf * (1-exp(-k*(age-t0)))
+  ssq = sum((Pred_weights-weight)^2)
+  return(ssq)
+}
+inits = c(log(100),log(0.5),0)
+optim_out_all = nlminb(start=inits,objective=vb_ssq,age=data_lm$age_months,weight=data_lm$mass)
+data_lm_sp = data_lm[which(data_lm$spring==1),]
+optim_out_sp = nlminb(start=inits,objective=vb_ssq,age=data_lm_sp$age_months,weight=data_lm_sp$mass)
+pars = optim_out_all$par
+Linf_all = exp(pars[1])
+k_all = exp(pars[2])
+t0_all = pars[3]
+pars = optim_out_sp$par
+Linf_sp = exp(pars[1])
+k_sp = exp(pars[2])
+t0_sp = pars[3]
+n_all = nrow(data_lm)
+n_sp = nrow(data_lm_sp)
+Pred_df = data.frame("MonthAge"=rep(c(0:150),2),"Model"=rep(c(2,3),each=151))
+Pred_df$mass_kg = 0
+Pred_df$final_mass_kg[1:151]=Linf_all * (1-exp(-k_all*(c(0:150)-t0_all)))
+Pred_df$final_mass_kg[152:302]=Linf_sp * (1-exp(-k_sp*(c(0:150)-t0_sp)))
+
+library(ggplot2)
+ggplot()+geom_point(data=data_lm,aes(x=age_months,y=mass,colour=spring+2))+
+   geom_line(data=Pred_df,aes(x=MonthAge,y=final_mass_kg,colour=Model,group=Model))+
+   xlab("Age (months)") + ylab("Mass (kg)")+xlim(c(0,120)) + theme(legend.position = "none")
+
+Bias_mult = 1+(Pred_df$final_mass_kg[1:151]-Pred_df$final_mass_kg[152:302])/Pred_df$final_mass_kg[152:302]
+```
+
+Here, light blue points and the light blue line represent a mass-age curve estimated from spring-only data, whereas the dark blue points represent other months.  The dark line actually represents the estimated mass-age-curve using data from *all* months, so the difference between the dark line and light blue line represents likely bias from basing growth curves on data largely restricted to the spring (as was done with ADF&G and NOAA data).  This ranges from a relatively modest 1.5% bias at age 2 to a slightly larger 4% bias at later ages.
+
+We have yet to account for seasonal oscillations in body mass, which are clear from looking at the raw data.  Let's try to model those using data from captive seals (all months).  We'll employ a sinusoidal pattern and one in which the amplitude of the pattern can potentially increase with age.
+
+
+
+```{r vb-oscil}
+# 1. Define the Step 1 Base Model (No Oscillations)
+vb_ssq_base <- function(pars, age, weight) {
+  Linf = exp(pars[1])
+  k = exp(pars[2])
+  t0 = pars[3]
+  Pred_weights = Linf * (1 - exp(-k * (age - t0)))
+  return(sum((Pred_weights - weight)^2))
+}
+
+# 2. Define the Step 2 Full Model (Asymptotic Amplitude & Fixed Frequency)
+vb_ssq_oscil_asymp <- function(pars, age, weight) {
+  # Standard Growth Parameters
+  Linf = exp(pars[1])
+  k = exp(pars[2])
+  t0 = pars[3]
+  
+  # Asymptotic Amplitude Parameters
+  A_max = exp(pars[4])   # Maximum amplitude it levels off to (exp ensures it stays positive)
+  k_amp = exp(pars[5])   # Rate at which the amplitude levels off
+  
+  # Phase Shift
+  C = pars[6]
+  
+  # FIXED Angular Frequency (Assuming a 12-month annual cycle)
+  B = (2 * pi) / 12 
+  
+  # Calculate Amplitude: grows with age but levels off at A_max
+  Amplitude = A_max * (1 - exp(-k_amp * age))
+  
+  # Calculate Oscillation and Final Weights
+  Oscil = Amplitude * sin(B * age + C)
+  Pred_weights = Linf * (1 - exp(-k * (age - t0))) + Oscil
+  
+  ssq = sum((Pred_weights - weight)^2)
+  return(ssq)
+}
+
+# STEP 1: Fit the base curve to lock in the main growth trajectory
+inits_base <- c(log(100), log(0.5), 0)
+optim_base <- nlminb(start = inits_base, 
+                     objective = vb_ssq_base, 
+                     age = data_lm$age_months, 
+                     weight = data_lm$mass)
+
+# STEP 2: Use base parameters as starting values for the full model
+inits_full <- c(
+  optim_base$par[1],     # Linf (from base)
+  optim_base$par[2],     # k (from base)
+  optim_base$par[3],     # t0 (from base)
+  log(5),                # log(A_max): start assuming max amplitude is 5 units
+  log(0.05),             # log(k_amp): start with a slow gradual leveling off
+  0                      # C (phase shift)
+)
+
+# STEP 3: Fit the full asymptotic oscillatory model
+optim_out_osc <- nlminb(
+  start = inits_full, 
+  objective = vb_ssq_oscil_asymp, 
+  age = data_lm$age_months, 
+  weight = data_lm$mass,
+  control = list(eval.max = 10000, iter.max = 10000)
+)
+
+# =====================================================================
+# Extract and format final parameters
+# =====================================================================
+pars <- optim_out_osc$par
+Linf = exp(pars[1])
+k = exp(pars[2])
+t0 = pars[3]
+A_max = exp(pars[4])
+k_amp = exp(pars[5])
+B = (2 * pi) / 12 
+C=pars[6]
+H <- numDeriv::hessian(func = vb_ssq_oscil_asymp, x = pars,
+                       age = data_lm$age_months, weight = data_lm$mass,)
+VarCov = solve(H)[4:6,4:6]
+Pred_df = data.frame("MonthAge"=rep(c(0:196)))
+Pred_df$mass_kg = 0
+Amplitude = A_max * (1 - exp(-k_amp * c(0:196)))
+  
+  # Calculate Oscillation and Final Weights
+Oscil = Amplitude * sin(B * c(0:196) + C)
+Pred_df$final_mass_kg=Linf_all * (1-exp(-k_all*(c(0:196)-t0_all)))+Oscil
+
+library(ggplot2)
+ggplot()+geom_point(data=data_lm,aes(x=age_months,y=mass))+
+   geom_line(data=Pred_df,color='red',aes(x=MonthAge,y=final_mass_kg))+
+   xlab("Age (months)") + ylab("Mass (kg)")+xlim(c(0,196)) + theme(legend.position = "none")
+```
+The modeled trend does not quite reach the extremes of some of the observed patterns, needin gto be somewhat dampened to match animal-specific deviations from the overall trend.  Importantly, I allow amplitude to increase with age of the animal.
+
+The next objective will be to incorporate this oscillating pattern, together with the small bias from analyzing primarily spring-caught animals, into our overall sex-specific mass-at-age model for wild animals.  We shall do this by (1) direct application of observed bias (capped at the oldest age analyzed), and (2) inclusion of the oscillating pattern (capped at the maximum amplitude estimated for observed data).  For the oscillating pattern, we can use the estimated covariance matrix of estimated parameters to propagate uncertainty into the final mass-at-age curve.
+
+```{r revised-posterior}
+  n_ages = length(Ages)
+  #bias correction
+  Seal_wt_age_f[1:151,]=Seal_wt_age_f[1:151,]*Bias_mult
+  Seal_wt_age_f[152:n_ages,]=Seal_wt_age_f[152:n_ages,]*Bias_mult[151]
+  Seal_wt_age_m[1:151,]=Seal_wt_age_m[1:151,]*Bias_mult
+  Seal_wt_age_m[152:n_ages,]=Seal_wt_age_m[152:n_ages,]*Bias_mult[151]
+  
+#oscillating pattern
+Ages_osc = c(1:192)
+for(irep in 1:10000){
+  #draw oscillation parameters from MVN distribution
+  Cur_par_link = mvtnorm::rmvnorm(1,pars[4:6],VarCov)
+  A_max_rep = exp(Cur_par_link[1])
+  k_amp_rep = exp(Cur_par_link[2])
+  C_rep=Cur_par_link[3]
+  Amplitude = A_max_rep * (1 - exp(-k_amp_rep * Ages_osc))
+  Oscil = Amplitude * sin(B * Ages_osc + C_rep)
+  Oscil_extended = Oscil
+  for(iyr in 17:40)Oscil_extended[((iyr-1)*12+1):(iyr*12)]=Oscil[181:192]
+  Seal_wt_age_m[,irep] = Seal_wt_age_m[,irep] + Oscil_extended
+  Seal_wt_age_f[,irep] = Seal_wt_age_f[,irep] + Oscil_extended
+}
+
+  
+  Plot_df = data.frame(Age = c(Ages,Ages),
+     Mean = c(rowMeans(Seal_wt_age_f),rowMeans(Seal_wt_age_m)),
+     Lower = c(apply(Seal_wt_age_f,1,"quant025"),apply(Seal_wt_age_m,1,"quant025")),
+     Upper = c(apply(Seal_wt_age_f,1,"quant975"),apply(Seal_wt_age_m,1,"quant975")),
+     Sex = c(rep("Female",12*40),rep("Male",12*40))
+  )
+  
+  ggplot() + geom_ribbon(data=Plot_df,aes(x=Age,ymin=Lower,ymax=Upper,fill=Sex,group=Sex),alpha=0.6)+
+    xlim(c(0,240)) + xlab('Age (Months)') + ylab("Mass (kg)")
+  
+  Wt_age = list("fem"=Seal_wt_age_f,"male"=Seal_wt_age_m)
+  save(Wt_age,file="../Data/Seal_wt_age.RData")
+
+  
+
+```
+Here the seasonal trend is capped at the level estimated for the oldest captive animals; extrapolating the pattern further results in huge annual swings for the oldest age classes.  The reduction in variance seen in older ages is a function of relatively little uncertainty in Bayesian estimates of mass-at-age asymptotes. 
 
 ## References 

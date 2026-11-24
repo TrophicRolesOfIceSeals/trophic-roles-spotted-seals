@@ -11,8 +11,8 @@ N_dist = exp(rnorm(10000,12.45542,sqrt(0.00556712)))  #total abundance of spotte
 
 #Spatial distribution
 
-tif_winter=raster("./Data/Combined_spotted_winter_cell_prob.tif")
-tif_summer=raster("./Data/Combined_spotted_summer_cell_prob.tif")
+tif_winter=raster("trophic-roles-spotted-seals/Data/Combined_spotted_winter_cell_prob.tif")
+tif_summer=raster("trophic-roles-spotted-seals/Data/Combined_spotted_summer_cell_prob.tif")
 winter_UD_poly=rasterToPolygons(tif_winter)
 summer_UD_poly=rasterToPolygons(tif_summer)
 winter_UD = st_centroid(st_as_sf(winter_UD_poly))
@@ -28,7 +28,7 @@ Winter_prop_chukchi = sum(winter_UD$Combined_spotted_winter_cell_prob[which(lat_
 
 
 #Age-sex composition
-load("./Data/Stable_stage_matrix.RData")
+load("trophic-roles-spotted-seals/Data/Stable_stage_matrix.RData")
 Age_proportions = Stable[4,]  #from Conn and Trukhanova 2022; 4th row is for spotted seals
 SA_proportions = 0.5*matrix(Age_proportions,40,2)  #sex on column, age on row, 50/50 sex ratio
 
@@ -74,8 +74,8 @@ write.csv(N_df,file="N_age_region.csv")
 
 ####  Total energy consumption  ####
 
-load('./Data/Seal_wt_age.RData')  #produced with seal_mass_at_age.Rmd
-load('./Data/Energy_predictions.RData') #produced with captiveFoodIntake_massSpecific_kcal-kg.Rmd
+load('trophic-roles-spotted-seals/Data/Seal_wt_age.RData')  #produced with seal_mass_at_age.Rmd
+load('trophic-roles-spotted-seals/Data/Energy_predictions.RData') #produced with captiveFoodIntake_massSpecific_kcal-kg.Rmd
 
 #we'll calculate energy consumption per age class and month to start with
 #to allow for different masses of seals within a season (important for young seals)
@@ -178,6 +178,16 @@ Summer_energy = apply(Kcal_tot_artk[,,1,],3,'sum')
 Winter_energy = apply(Kcal_tot_artk[,,2,],3,'sum')
 summary(Summer_energy/(Summer_energy+Winter_energy))
 
+tot = sum(Kcal_tot_artk)
+#summer, bering
+summary(sum(Kcal_tot_artk[,1,1,])/tot)
+#summer, chukchi
+summary(sum(Kcal_tot_artk[,2,1,])/tot)
+#winter, bering
+summary(sum(Kcal_tot_artk[,1,2,])/tot)
+#winter, chukchi
+summary(sum(Kcal_tot_artk[,2,2,])/tot)
+
 
 #data frame for plotting
 Plot_df = data.frame(matrix(0,40000,5))
@@ -223,7 +233,7 @@ dev.off()
 
 
 #### Bring in composition data
-load("./Data/prey_composition_g_kcal.RData")
+load("trophic-roles-spotted-seals/Data/prey_composition_g_kcal.RData")
 #indices are MCMC rep, prey species, Age_class,Region,Season
 Biomass_g_kpart = B #Biomass in grams
 for(k in 1:10){
